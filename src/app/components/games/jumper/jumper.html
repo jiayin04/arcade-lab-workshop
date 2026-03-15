@@ -1,0 +1,23 @@
+<app-games [title]="themeService.isRetro() ? '[ JUMPER.EXE ]' : 'Jumper'">
+    <div class="jumper-wrap">
+        <div class="hud">
+            <span class="score-tag" aria-live="polite" i18n="@@jumper.score">SCORE: {{ score() }}</span>
+            <span class="hint-inline">
+                {{ themeService.isRetro() ? 'SPACE / TAP' : 'Space or tap to jump' }}
+            </span>
+        </div>
+
+        <canvas #canvas [width]="W" [height]="H" class="jumper-canvas" tabindex="0" role="img"
+            aria-label="Endless runner game. Press Space or tap to jump over obstacles." (click)="onTap()"></canvas>
+
+        <div class="controls">
+            <button class="gbtn" (click)="startGame()" i18n="@@jumper.start">
+                {{ running() ? '↺ RESTART' : '▶ START' }}
+            </button>
+        </div>
+
+        <p class="hint-text" i18n="@@jumper.hint">
+            Avoid obstacles — speed increases every 50 points
+        </p>
+    </div>
+</app-games>

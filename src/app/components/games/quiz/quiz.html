@@ -1,0 +1,52 @@
+<app-games [title]="themeService.isRetro() ? '[ NG_QUIZ.EXE ]' : 'Angular Quiz'">
+    <div class="quiz-wrap">
+
+        @if (!finished()) {
+        <!-- Progress bar -->
+        <div class="progress-bar" role="progressbar" [attr.aria-valuenow]="qIndex()" [attr.aria-valuemax]="TOTAL"
+            [attr.aria-label]="'Question ' + (qIndex() + 1) + ' of ' + TOTAL">
+            <div class="progress-fill" [style.width.%]="((qIndex()) / TOTAL) * 100"></div>
+        </div>
+
+        <!-- HUD row -->
+        <div class="hud">
+            <span class="score-tag" aria-live="polite">Q {{ qIndex() + 1 }}/{{ TOTAL }}</span>
+            <span class="score-tag">Score: {{ score() }}</span>
+        </div>
+
+        <!-- Question -->
+        <div class="question" role="heading" aria-level="2">
+            {{ current().question }}
+        </div>
+
+        <!-- Options -->
+        <div class="options" role="radiogroup" [attr.aria-label]="'Answer options for: ' + current().question">
+            @for (opt of current().options; track $index) {
+            <button class="opt-btn" [class.correct]="answered() !== null && $index === current().answer"
+                [class.wrong]="answered() === $index && $index !== current().answer" [disabled]="answered() !== null"
+                role="radio" [attr.aria-checked]="answered() === $index"
+                [attr.aria-label]="opt + (answered() !== null && $index === current().answer ? ' — correct answer' : '')"
+                (click)="answer($index)">{{ opt }}</button>
+            }
+        </div>
+
+        <!-- Explanation (shown after answering) -->
+        @if (answered() !== null) {
+        <div class="explanation" role="alert" aria-live="assertive">
+            {{ current().explanation }}
+        </div>
+        }
+
+        } @else {
+        <!-- Results screen -->
+        <div class="results" role="region" aria-label="Quiz results">
+            <div class="trophy" aria-hidden="true">🏆</div>
+            <h2 class="results-title" i18n="@@quiz.complete">Quiz Complete!</h2>
+            <span class="score-tag large">{{ score() }}/{{ TOTAL }} correct</span>
+            <p class="grade">{{ gradeMessage() }}</p>
+            <button class="gbtn" (click)="restart()" i18n="@@quiz.again">Play Again</button>
+        </div>
+        }
+
+    </div>
+</app-games>

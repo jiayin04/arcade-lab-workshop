@@ -1,0 +1,414 @@
+// ── Layout shell ─────────────────────────────────────────────
+.desktop {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Inter', sans-serif;
+}
+
+// ── Wallpaper canvas (fills whole screen) ────────────────────
+.wallpaper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+// ── Retro CRT scanlines ───────────────────────────────────────
+.scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.08) 3px,
+    rgba(0, 0, 0, 0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 5;
+}
+
+// ── Desktop icon area ─────────────────────────────────────────
+.icon-area {
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  bottom: 56px;       // above taskbar
+  display: flex;
+  align-items: flex-start;
+  z-index: 10;
+}
+
+// Icons stack top-to-bottom, one column — Windows style
+.icon-column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.desktop-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  width: 80px;
+  text-align: center;
+  transition: background 0.15s ease;
+  user-select: none;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.18);
+  }
+
+  &.selected {
+    background: rgba(255, 255, 255, 0.28);
+    outline: 1px solid rgba(255, 255, 255, 0.5);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #60a5fa;
+    outline-offset: 2px;
+  }
+}
+
+.icon-img-wrap {
+  position: relative;
+  width: 52px;
+  height: 52px;
+}
+
+.icon-img {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+
+  .desktop-icon:hover & {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  }
+
+  .desktop-icon.selected & {
+    transform: scale(0.94);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.icon-emoji {
+  font-size: 28px;
+  line-height: 1;
+  position: relative;
+  z-index: 2;
+}
+
+// Pixel-art overlay for retro icons
+.pixel-overlay {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,0,0,0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.3) 1px, transparent 1px);
+  background-size: 4px 4px;
+  z-index: 3;
+}
+
+.icon-label {
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  word-break: break-word;
+
+  // Text shadow for readability on any wallpaper
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+// ── Taskbar ────────────────────────────────────────────────────
+.taskbar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+  z-index: 20;
+}
+
+.taskbar-sep {
+  width: 1px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+// ── Start button ───────────────────────────────────────────────
+.start-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  height: 36px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 600;
+  transition: all 0.15s;
+  flex-shrink: 0;
+
+  &:focus-visible { outline: 2px solid #60a5fa; }
+}
+
+.start-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.start-text {
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+// ── Taskbar app buttons ────────────────────────────────────────
+.taskbar-apps {
+  display: flex;
+  gap: 3px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.taskbar-app {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  height: 36px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.15s;
+  white-space: nowrap;
+
+  &:focus-visible { outline: 2px solid #60a5fa; }
+}
+
+.taskbar-emoji { font-size: 16px; line-height: 1; }
+.taskbar-label { font-size: 11px; }
+
+// ── Taskbar right cluster ──────────────────────────────────────
+.taskbar-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.theme-pills {
+  display: flex;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid;
+}
+
+.pill {
+  padding: 4px 10px;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  transition: all 0.15s;
+  letter-spacing: 0.3px;
+}
+
+.clock-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 0 6px;
+  line-height: 1.2;
+}
+
+.clock-time {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.clock-date {
+  font-size: 10px;
+}
+
+
+// ════════════════════════════════════════════════════════════════
+//  RETRO THEME
+// ════════════════════════════════════════════════════════════════
+.desktop.retro {
+
+  .icon-label {
+    color: #e2e8f0;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    letter-spacing: 0.5px;
+  }
+
+  .icon-img {
+    border: 2px solid rgba(168, 85, 247, 0.6);
+    border-radius: 0;
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.4), 0 4px 12px rgba(0, 0, 0, 0.6);
+
+    .desktop-icon:hover & {
+      border-color: #a855f7;
+      box-shadow: 0 0 16px rgba(168, 85, 247, 0.7), 0 8px 20px rgba(0, 0, 0, 0.6);
+    }
+  }
+
+  .desktop-icon.selected {
+    background: rgba(168, 85, 247, 0.2);
+    outline-color: #a855f7;
+  }
+
+  // Taskbar
+  .taskbar {
+    background: rgba(5, 3, 18, 0.92);
+    border-top: 1px solid rgba(168, 85, 247, 0.4);
+    backdrop-filter: blur(0);
+  }
+
+  .taskbar-sep { background: rgba(168, 85, 247, 0.3); }
+
+  .start-btn {
+    background: linear-gradient(135deg, #7c3aed, #4c1d95);
+    color: #e9d5ff;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    border-radius: 0;
+    border: 1px solid #a855f7;
+    box-shadow: 0 0 10px rgba(124, 58, 237, 0.5);
+
+    &:hover { background: linear-gradient(135deg, #8b5cf6, #6d28d9); box-shadow: 0 0 16px rgba(139, 92, 246, 0.7); }
+  }
+
+  .start-icon { color: #d8b4fe; font-size: 14px; }
+
+  .taskbar-app {
+    background: rgba(109, 40, 217, 0.2);
+    color: #c4b5fd;
+    border: 1px solid rgba(109, 40, 217, 0.4);
+    border-radius: 0;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 5px;
+
+    &:hover { background: rgba(109, 40, 217, 0.4); border-color: #7c3aed; color: #e9d5ff; }
+  }
+
+  .taskbar-emoji { font-size: 14px; }
+
+  .theme-pills {
+    border-color: rgba(168, 85, 247, 0.4);
+    border-radius: 0;
+  }
+
+  .pill {
+    background: transparent;
+    color: #a78bfa;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 5px;
+    padding: 5px 8px;
+
+    &.active { background: #7c3aed; color: #ede9fe; }
+    &:hover:not(.active) { background: rgba(124, 58, 237, 0.25); }
+  }
+
+  .clock-time { color: #00ff88; font-family: 'Press Start 2P', monospace; font-size: 8px; }
+  .clock-date { color: #6ee7b7; font-family: 'Press Start 2P', monospace; font-size: 5px; }
+  .taskbar-sep { background: rgba(168, 85, 247, 0.3); }
+}
+
+
+// ════════════════════════════════════════════════════════════════
+//  MODERN THEME
+// ════════════════════════════════════════════════════════════════
+.desktop.modern {
+
+  .icon-label {
+    color: #fff;
+    font-weight: 600;
+    font-size: 11px;
+  }
+
+  .icon-img {
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+
+  .desktop-icon.selected {
+    background: rgba(255, 255, 255, 0.32);
+    outline-color: rgba(255, 255, 255, 0.7);
+  }
+
+  // Taskbar — Windows 11 frosted glass
+  .taskbar {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(20px) saturate(1.8);
+    -webkit-backdrop-filter: blur(20px) saturate(1.8);
+    border-top: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  .taskbar-sep { background: rgba(0, 0, 0, 0.12); }
+
+  .start-btn {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: #fff;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+
+    &:hover { background: linear-gradient(135deg, #60a5fa, #2563eb); box-shadow: 0 4px 14px rgba(59, 130, 246, 0.5); }
+  }
+
+  .start-icon { font-size: 18px; }
+  .modern-start { color: #fff; }
+
+  .taskbar-app {
+    background: rgba(0, 0, 0, 0.05);
+    color: #374151;
+    border: none;
+    border-radius: 8px;
+
+    &:hover { background: rgba(0, 0, 0, 0.1); color: #111827; }
+  }
+
+  .theme-pills { border-color: rgba(0, 0, 0, 0.12); border-radius: 8px; overflow: hidden; }
+
+  .pill {
+    background: transparent;
+    color: #6b7280;
+    font-family: 'Inter', sans-serif;
+
+    &.active { background: #3b82f6; color: #fff; }
+    &:hover:not(.active) { background: rgba(0, 0, 0, 0.06); }
+  }
+
+  .clock-time { color: #1f2937; font-family: 'Inter', sans-serif; }
+  .clock-date { color: #6b7280; }
+}

@@ -1,0 +1,59 @@
+<div class="landing" [class.retro]="themeService.isRetro()" [class.modern]="themeService.isModern()">
+
+  <!-- Three.js canvas fills the whole background -->
+  <canvas #threeCanvas class="three-canvas" (click)="onLaptopClick()"></canvas>
+
+  <!-- Subtle vignette -->
+  <div class="vignette" aria-hidden="true"></div>
+
+  <!-- Overlay title (sits above canvas, pointer-events: none) -->
+  <div class="overlay" aria-label="Angular Arcade Lab landing">
+    <h1 class="title" i18n="@@landing.title">Angular Arcade Lab</h1>
+    <p class="subtitle" i18n="@@landing.subtitle">GDG On Campus · Workshop</p>
+  </div>
+
+  <!-- Mode toggle — top-right corner -->
+  <div class="mode-toggle" role="group" aria-label="Select theme">
+    <button
+      class="mode-btn retro-btn"
+      [class.active]="themeService.isRetro()"
+      (click)="themeService.setTheme('retro'); $event.stopPropagation()"
+      aria-label="Switch to retro theme"
+      i18n="@@theme.retro"
+    >RETRO</button>
+    <button
+      class="mode-btn modern-btn"
+      [class.active]="themeService.isModern()"
+      (click)="themeService.setTheme('modern'); $event.stopPropagation()"
+      aria-label="Switch to modern theme"
+      i18n="@@theme.modern"
+    >Modern</button>
+  </div>
+
+  <!-- Click hint (hidden once entering) -->
+  @if (!entering()) {
+    <div class="click-hint" aria-live="polite" role="status" i18n="@@landing.hint">
+      <span class="hint-arrow">▼</span>
+      CLICK LAPTOP TO ENTER
+      <span class="hint-arrow">▼</span>
+    </div>
+  } @else {
+    <div class="entering-msg" aria-live="polite" role="status">
+      @if (themeService.isRetro()) {
+        <span>BOOTING...</span>
+      } @else {
+        <span>Opening...</span>
+      }
+    </div>
+  }
+
+  <!-- Theme label (shows current theme name near laptop) -->
+  <div class="theme-label" aria-live="polite">
+    @if (themeService.isRetro()) {
+      <span class="theme-label-text retro-label">◈ RETRO MODE</span>
+    } @else {
+      <span class="theme-label-text modern-label">◈ Modern Mode</span>
+    }
+  </div>
+
+</div>

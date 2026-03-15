@@ -1,0 +1,107 @@
+.snake-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 352px;
+}
+
+.snake-canvas {
+  display: block;
+  max-width: 100%;
+}
+
+.hint-text {
+  font-size: 10px;
+  opacity: 0.5;
+  text-align: center;
+}
+
+// ── shared game ui tokens ────────────────────────────────────
+.score-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 20px;
+}
+
+.gbtn {
+  padding: 8px 18px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  transition: all 0.15s;
+
+  &:hover { transform: scale(1.03); }
+  &:active { transform: scale(0.97); }
+  &:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+}
+
+// ── RETRO ────────────────────────────────────────────────────
+:host-context(.theme-retro) {
+  .score-tag {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    border-radius: 0;
+    background: transparent;
+    border: 1px solid #ffcc00;
+    color: #ffcc00;
+  }
+
+  .gbtn {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    background: transparent;
+    border: 2px solid #00ff88;
+    color: #00ff88;
+    border-radius: 0;
+    box-shadow: 3px 3px 0 #00ff88;
+    letter-spacing: 1px;
+
+    &:hover {
+      background: rgba(0, 255, 136, 0.12);
+      transform: translate(-1px, -1px);
+      box-shadow: 4px 4px 0 #00ff88;
+    }
+  }
+
+  .snake-canvas {
+    border: 1px solid #00ff88;
+    border-radius: 0;
+  }
+
+  .hint-text {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: #00ff88;
+  }
+}
+
+// ── MODERN ────────────────────────────────────────────────────
+:host-context(.theme-modern) {
+  .score-tag {
+    background: #e8f0ff;
+    color: #3a5db0;
+  }
+
+  .gbtn {
+    background: #4f8ef7;
+    color: #fff;
+    &:hover { background: #3a7ae8; }
+  }
+
+  .snake-canvas { border-radius: 8px; }
+
+  .hint-text { color: #888; }
+}
