@@ -196,4 +196,4 @@ Extract: `ng extract-i18n --output-path src/i18n`
 5. **Make it PWA** — run `ng add @angular/pwa` and enable offline play
 
 ## License
-[LICENSE.md](LICENSE.md)
+[LICENSE.md](LICENSE)
