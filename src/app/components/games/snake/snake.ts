@@ -1,17 +1,13 @@
 import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
+  Component, OnDestroy, AfterViewInit, ViewChild,
+  ElementRef, inject, signal, ChangeDetectionStrategy,
   HostListener,
-  inject,
-  OnDestroy,
-  signal,
-  ViewChild,
 } from '@angular/core';
-import { SnakeDir, SnakePoint } from '../../../models/models';
-import { ThemeService } from '../../../services/theme';
+import { Router } from '@angular/router';
+import { ThemeService } from '../../../services/theme/theme';
+import { I18nService } from '../../../services/i18n/i18n';
 import { Games } from '../games';
+import { SnakePoint, SnakeDir } from '../../../models/models';
 
 const COLS = 22, ROWS = 14, CELL = 16;
 
@@ -27,12 +23,14 @@ export class Snake implements AfterViewInit, OnDestroy {
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
 
   protected themeService = inject(ThemeService);
+  protected i18nService  = inject(I18nService);
+  private   router       = inject(Router);
 
   readonly COLS = COLS;
   readonly ROWS = ROWS;
   readonly CELL = CELL;
 
-  score = signal(0);
+  score   = signal(0);
   running = signal(false);
 
   private snake: SnakePoint[] = [];
@@ -51,9 +49,9 @@ export class Snake implements AfterViewInit, OnDestroy {
   startGame(): void {
     this.stop();
     this.snake = [{ x: 11, y: 7 }, { x: 10, y: 7 }, { x: 9, y: 7 }];
-    this.dir = 'r';
+    this.dir   = 'r';
     this.score.set(0);
-    this.food = this.randomFood();
+    this.food  = this.randomFood();
     this.running.set(true);
     this.timer = setInterval(() => this.tick(), 115);
   }
@@ -69,7 +67,7 @@ export class Snake implements AfterViewInit, OnDestroy {
     const next = map[e.key];
     if (next && opp[next] !== this.dir) {
       this.dir = next;
-      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) e.preventDefault();
+      if (e.key.startsWith('Arrow')) e.preventDefault();
     }
   }
 
@@ -104,6 +102,7 @@ export class Snake implements AfterViewInit, OnDestroy {
     const ctx = this.getCtx(); if (!ctx) return;
     const W = COLS * CELL, H = ROWS * CELL;
     const isR = this.themeService.isRetro();
+
     ctx.fillStyle = isR ? '#050510' : '#e8f5e9';
     ctx.fillRect(0, 0, W, H);
 
@@ -146,7 +145,7 @@ export class Snake implements AfterViewInit, OnDestroy {
     ctx.fillStyle = isR ? '#00ff88' : '#2e7d32';
     ctx.font = isR ? '8px "Press Start 2P"' : '13px Inter';
     ctx.textAlign = 'center';
-    ctx.fillText('Press START', W / 2, H / 2);
+    ctx.fillText(this.i18nService.t('snake.start'), W / 2, H / 2);
   }
 
   private drawGameOver(): void {
@@ -156,10 +155,10 @@ export class Snake implements AfterViewInit, OnDestroy {
     ctx.fillStyle = isR ? '#ff00aa' : '#e53935';
     ctx.font = isR ? '8px "Press Start 2P"' : 'bold 15px Inter';
     ctx.textAlign = 'center';
-    ctx.fillText('GAME OVER', W / 2, H / 2 - 8);
+    ctx.fillText(this.i18nService.t('snake.gameover'), W / 2, H / 2 - 8);
     ctx.fillStyle = isR ? '#ffcc00' : '#555';
     ctx.font = isR ? '6px "Press Start 2P"' : '13px Inter';
-    ctx.fillText(`Score: ${this.score()}`, W / 2, H / 2 + 14);
+    ctx.fillText(`${this.i18nService.t('snake.score')}: ${this.score()}`, W / 2, H / 2 + 14);
   }
 
   private stop(): void {
@@ -177,4 +176,3 @@ export class Snake implements AfterViewInit, OnDestroy {
     return this.canvasRef?.nativeElement.getContext('2d') ?? null;
   }
 }
-

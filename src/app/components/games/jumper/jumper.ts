@@ -1,15 +1,10 @@
 import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
+  Component, OnDestroy, AfterViewInit, ViewChild,
+  ElementRef, inject, signal, ChangeDetectionStrategy,
   HostListener,
-  inject,
-  OnDestroy,
-  signal,
-  ViewChild,
 } from '@angular/core';
-import { ThemeService } from '../../../services/theme';
+import { ThemeService } from '../../../services/theme/theme';
+import { I18nService } from '../../../services/i18n/i18n';
 import { Games } from '../games';
 
 interface Obstacle { x: number; w: number; h: number; }
@@ -28,6 +23,7 @@ export class Jumper implements AfterViewInit, OnDestroy {
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
 
   protected themeService = inject(ThemeService);
+  protected i18nService  = inject(I18nService);
 
   readonly W = W;
   readonly H = H;
@@ -35,20 +31,15 @@ export class Jumper implements AfterViewInit, OnDestroy {
   score   = signal(0);
   running = signal(false);
 
-  private y    = 0;
-  private vy   = 0;
+  private y     = 0;
+  private vy    = 0;
   private obs: Obstacle[] = [];
-  private spd  = 3.2;
+  private spd   = 3.2;
   private frame = 0;
   private raf   = 0;
 
-  ngAfterViewInit(): void {
-    this.drawIdle();
-  }
-
-  ngOnDestroy(): void {
-    cancelAnimationFrame(this.raf);
-  }
+  ngAfterViewInit(): void { this.drawIdle(); }
+  ngOnDestroy(): void     { cancelAnimationFrame(this.raf); }
 
   @HostListener('window:keydown', ['$event'])
   onKey(e: KeyboardEvent): void {
@@ -82,15 +73,13 @@ export class Jumper implements AfterViewInit, OnDestroy {
     this.frame++;
     this.score.set(Math.floor(this.frame / 5));
 
-    // Physics
     this.vy += 0.55;
     this.y = Math.min(0, this.y + this.vy);
 
-    // Spawn obstacles
     const gap = Math.max(35, 80 - Math.floor(this.score() / 25));
-    if (this.frame % gap === 0) {
+    if (this.frame % gap === 0)
       this.obs.push({ x: W, w: 14 + Math.random() * 10, h: 18 + Math.random() * 28 });
-    }
+
     this.obs.forEach(o => o.x -= this.spd + this.score() / 300);
     this.obs = this.obs.filter(o => o.x > -30);
     this.spd = Math.min(8, 3.2 + this.score() / 200);
@@ -102,11 +91,9 @@ export class Jumper implements AfterViewInit, OnDestroy {
     const isR = this.themeService.isRetro();
     const py  = GROUND + this.y;
 
-    // Sky
     ctx.fillStyle = isR ? '#050510' : '#87ceeb';
     ctx.fillRect(0, 0, W, H);
 
-    // Clouds (modern only)
     if (!isR) {
       ctx.fillStyle = 'rgba(255,255,255,0.65)';
       [[70, 22, 35, 12], [210, 18, 28, 10], [390, 24, 38, 13]].forEach(([cx, cy, rx, ry]) => {
@@ -116,15 +103,13 @@ export class Jumper implements AfterViewInit, OnDestroy {
       });
     }
 
-    // Ground
     ctx.fillStyle = isR ? 'rgba(0,255,136,0.05)' : 'rgba(0,0,0,0.03)';
-    for (let gx = 0; gx < W; gx += 20) {
+    for (let gx = 0; gx < W; gx += 20)
       ctx.fillRect(gx, GROUND, 2, 4 + Math.sin(this.frame / 60 + gx / 30) * 2);
-    }
+
     ctx.fillStyle = isR ? '#003300' : '#4caf50';
     ctx.fillRect(0, GROUND, W, H - GROUND);
 
-    // Player
     if (isR) {
       ctx.fillStyle = '#00ff88';
       ctx.fillRect(PLAYER_X - 8, py - 22, 16, 16);
@@ -134,27 +119,22 @@ export class Jumper implements AfterViewInit, OnDestroy {
       ctx.fillRect(PLAYER_X - 4, py - 18, 3, 3);
       ctx.fillRect(PLAYER_X + 3, py - 18, 3, 3);
     } else {
-      // Body
       ctx.fillStyle = '#1565c0';
       ctx.beginPath(); ctx.ellipse(PLAYER_X, py - 11, 8, 11, 0, 0, Math.PI * 2); ctx.fill();
-      // Head
       ctx.fillStyle = '#ffcc80';
       ctx.beginPath(); ctx.arc(PLAYER_X, py - 25, 7, 0, Math.PI * 2); ctx.fill();
-      // Legs
       ctx.fillStyle = '#1565c0';
-      const legOff = Math.sin(this.frame * 0.3) * 3;
-      ctx.fillRect(PLAYER_X - 5, py - 4, 4, 8 + legOff);
-      ctx.fillRect(PLAYER_X + 1, py - 4, 4, 8 - legOff);
+      const leg = Math.sin(this.frame * 0.3) * 3;
+      ctx.fillRect(PLAYER_X - 5, py - 4, 4, 8 + leg);
+      ctx.fillRect(PLAYER_X + 1, py - 4, 4, 8 - leg);
     }
 
-    // Obstacles
     let dead = false;
     this.obs.forEach(o => {
       ctx.fillStyle = isR ? '#ff00aa' : '#5d4037';
       ctx.fillRect(o.x, GROUND - o.h, o.w, o.h);
-      if (o.x < PLAYER_X + 9 && o.x + o.w > PLAYER_X - 8 && py - 22 < GROUND - o.h + o.h + 4) {
+      if (o.x < PLAYER_X + 9 && o.x + o.w > PLAYER_X - 8 && py - 22 < GROUND - o.h + o.h + 4)
         dead = true;
-      }
     });
 
     if (dead) this.gameOver(ctx);
@@ -169,10 +149,10 @@ export class Jumper implements AfterViewInit, OnDestroy {
     ctx.fillStyle = isR ? '#ff00aa' : '#e53935';
     ctx.font = isR ? '8px "Press Start 2P"' : 'bold 15px Inter';
     ctx.textAlign = 'center';
-    ctx.fillText('GAME OVER', W / 2, H / 2 - 8);
+    ctx.fillText(this.i18nService.t('snake.gameover'), W / 2, H / 2 - 8);
     ctx.fillStyle = isR ? '#ffcc00' : '#fff';
     ctx.font = isR ? '6px "Press Start 2P"' : '12px Inter';
-    ctx.fillText(`Score: ${this.score()}`, W / 2, H / 2 + 12);
+    ctx.fillText(`${this.i18nService.t('jumper.score')}: ${this.score()}`, W / 2, H / 2 + 12);
   }
 
   private drawIdle(): void {
@@ -185,7 +165,7 @@ export class Jumper implements AfterViewInit, OnDestroy {
     ctx.fillStyle = isR ? '#00ff88' : '#1b5e20';
     ctx.font = isR ? '8px "Press Start 2P"' : '13px Inter';
     ctx.textAlign = 'center';
-    ctx.fillText('Press START or SPACE', W / 2, 75);
+    ctx.fillText(this.i18nService.t('jumper.start'), W / 2, 75);
   }
 
   private getCtx(): CanvasRenderingContext2D | null {

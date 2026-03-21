@@ -1,16 +1,19 @@
 <div class="game-window" [class]="themeService.themeClass()" role="dialog" [attr.aria-label]="title + ' game window'">
-    <!-- Window chrome bar -->
-    <div class="win-bar" role="toolbar" aria-label="Window controls">
-        <div class="win-dots" aria-hidden="true">
-            <span class="dot dot-red"></span>
-            <span class="dot dot-yellow"></span>
-            <span class="dot dot-green"></span>
-        </div>
-        <span class="win-title">{{ title }}</span>
-        <button class="win-close" (click)="close()" aria-label="Close game and return to desktop">✕</button>
+
+  <!-- Window chrome bar -->
+  <div class="win-bar" role="toolbar" aria-label="Window controls">
+    <div class="win-dots" aria-hidden="true">
+      <span class="dot dot-red"></span>
+      <span class="dot dot-yellow"></span>
+      <span class="dot dot-green"></span>
     </div>
-    <!-- Game content slot -->
-    <div class="win-body">
-        <ng-content />
-    </div>
+    <span class="win-title">{{ title }}</span>
+    <button class="win-close" (click)="close()" [attr.aria-label]="i18nService.t('nav.back')">✕</button>
+  </div>
+
+  <!-- Game content slot -->
+  <div class="win-body">
+    <ng-content />
+  </div>
+
 </div>

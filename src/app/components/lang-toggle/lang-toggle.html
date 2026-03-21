@@ -1,0 +1,20 @@
+<div
+  class="lang-toggle"
+  [class.retro]="themeService.isRetro()"
+  [class.compact]="compact"
+  role="group"
+  aria-label="Select language"
+>
+  @for (opt of locales; track opt.code) {
+    <button
+      class="lang-btn"
+      [class.active]="i18n.locale() === opt.code"
+      [attr.aria-label]="opt.nativeName"
+      [attr.aria-pressed]="i18n.locale() === opt.code"
+      (click)="i18n.setLocale(opt.code); $event.stopPropagation()"
+    >
+      <span class="lang-flag" aria-hidden="true">{{ opt.flag }}</span>
+      <span class="lang-label">{{ opt.label }}</span>
+    </button>
+  }
+</div>

@@ -1,4 +1,3 @@
-// ── Shell ────────────────────────────────────────────────────
 .landing {
   position: relative;
   width: 100%;
@@ -10,7 +9,6 @@
   background: #030712;
 }
 
-// ── Three.js canvas ───────────────────────────────────────────
 .three-canvas {
   position: absolute;
   inset: 0;
@@ -20,7 +18,6 @@
   cursor: pointer;
 }
 
-// ── Vignette ──────────────────────────────────────────────────
 .vignette {
   position: absolute;
   inset: 0;
@@ -29,13 +26,12 @@
   z-index: 2;
 }
 
-// ── Centre overlay (title) ────────────────────────────────────
+// ── Centre title ───────────────────────────────────────────────
 .overlay {
   position: relative;
   z-index: 5;
   text-align: center;
   pointer-events: none;
-  // Pushed up so it clears the 3D laptop
   transform: translateY(-120px);
 }
 
@@ -51,30 +47,49 @@
   opacity: 0.55;
 }
 
-// ── Mode toggle (top-right) ───────────────────────────────────
-.mode-toggle {
+// ── Top-right controls row: lang + theme ──────────────────────
+.top-controls {
   position: absolute;
-  top: 18px;
-  right: 18px;
+  top: 16px;
+  right: 16px;
   z-index: 20;
   display: flex;
-  gap: 6px;
+  align-items: center;
+  gap: 8px;
+}
+
+.ctrl-sep {
+  width: 1px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+}
+
+// ── Theme mode toggle ─────────────────────────────────────────
+.mode-toggle {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .mode-btn {
-  padding: 6px 14px;
+  padding: 5px 12px;
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
-  border-radius: 20px;
-  border: 1.5px solid;
-  transition: all 0.22s ease;
+  border: none;
+  transition: all 0.2s ease;
   letter-spacing: 0.5px;
+  font-family: inherit;
 
-  &:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: -2px;
+  }
 }
 
-// ── Click hint (bottom centre) ────────────────────────────────
+// ── Click hint ────────────────────────────────────────────────
 .click-hint {
   position: absolute;
   bottom: 30px;
@@ -88,13 +103,23 @@
   font-size: 10px;
   letter-spacing: 3px;
   animation: pulse 2.2s ease-in-out infinite;
+  pointer-events: none;
 }
 
-.hint-arrow { font-size: 8px; }
+.hint-arrow {
+  font-size: 8px;
+}
 
 @keyframes pulse {
-  0%, 100% { opacity: 0.35; }
-  50%       { opacity: 1;    }
+
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+
+  50% {
+    opacity: 1;
+  }
 }
 
 // ── Entering message ──────────────────────────────────────────
@@ -106,25 +131,57 @@
   z-index: 10;
   font-size: 10px;
   letter-spacing: 3px;
-  animation: entering 0.5s ease-in forwards;
+  animation: fadeUp 0.4s ease forwards;
+  pointer-events: none;
 }
 
-@keyframes entering {
-  from { opacity: 0; transform: translateX(-50%) translateY(6px); }
-  to   { opacity: 1; transform: translateX(-50%) translateY(0);   }
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
-// ── Theme label (bottom-left) ─────────────────────────────────
+// ── Theme label bottom-right ──────────────────────────────────
 .theme-label {
   position: absolute;
   bottom: 28px;
   right: 20px;
   z-index: 10;
+  pointer-events: none;
 }
 
 .theme-label-text {
   font-size: 10px;
   letter-spacing: 1.5px;
+}
+
+// ── Locale indicator bottom-left ──────────────────────────────
+.locale-indicator {
+  position: absolute;
+  bottom: 28px;
+  left: 20px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.locale-flag {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.locale-name {
+  font-size: 10px;
+  letter-spacing: 1px;
+  opacity: 0.7;
 }
 
 
@@ -137,12 +194,22 @@
   .title {
     font-family: 'Press Start 2P', monospace;
     color: #e9d5ff;
+    font-size: small;
     text-shadow: 0 0 20px rgba(167, 85, 247, 0.9), 0 0 40px rgba(167, 85, 247, 0.4);
   }
 
   .subtitle {
     font-family: 'Courier Prime', monospace;
-    color: #a78bfa;
+    color: #ccbcfc;
+  }
+
+  .mode-toggle {
+    border-radius: 0;
+    border-color: rgba(168, 85, 247, 0.5);
+  }
+
+  .ctrl-sep {
+    background: rgba(168, 85, 247, 0.35);
   }
 
   .retro-btn {
@@ -150,28 +217,54 @@
     font-size: 6px;
     background: rgba(109, 40, 217, 0.3);
     color: #c4b5fd;
-    border-color: #7c3aed;
 
     &.active {
       background: #7c3aed;
       color: #ede9fe;
-      box-shadow: 0 0 14px rgba(124, 58, 237, 0.7);
+      box-shadow: 0 0 12px rgba(124, 58, 237, 0.7);
     }
 
-    &:hover:not(.active) { background: rgba(109, 40, 217, 0.5); }
+    &:hover:not(.active) {
+      background: rgba(109, 40, 217, 0.5);
+    }
   }
 
   .modern-btn {
     background: rgba(255, 255, 255, 0.05);
-    color: rgba(255, 255, 255, 0.45);
-    border-color: rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.4);
 
-    &.active { background: rgba(255, 255, 255, 0.12); color: #fff; border-color: rgba(255, 255, 255, 0.4); }
+    &.active {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+    }
+
+    &:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.1);
+    }
   }
 
-  .click-hint { color: #a78bfa; }
-  .entering-msg { color: #00ff88; font-family: 'Press Start 2P', monospace; font-size: 8px; }
-  .retro-label { color: #a855f7; font-family: 'Press Start 2P', monospace; font-size: 6px; }
+  .click-hint {
+    color: #a78bfa;
+    font-family: 'Courier Prime', monospace;
+  }
+
+  .entering-msg {
+    color: #00ff88;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+  }
+
+  .retro-label {
+    color: #a855f7;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+  }
+
+  .locale-name {
+    color: #c4b5fd;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 5px;
+  }
 }
 
 
@@ -196,29 +289,61 @@
     font-size: 11px;
   }
 
+  .mode-toggle {
+    border-color: rgba(255, 255, 255, 0.18);
+    border-radius: 8px;
+  }
+
+  .ctrl-sep {
+    background: rgba(255, 255, 255, 0.18);
+  }
+
   .retro-btn {
     background: rgba(255, 255, 255, 0.05);
     color: rgba(255, 255, 255, 0.4);
-    border-color: rgba(255, 255, 255, 0.15);
 
-    &.active { background: rgba(255, 255, 255, 0.12); color: #fff; border-color: rgba(255, 255, 255, 0.4); }
+    &.active {
+      background: rgba(255, 255, 255, 0.14);
+      color: #fff;
+    }
+
+    &:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.1);
+    }
   }
 
   .modern-btn {
-    background: rgba(59, 130, 246, 0.2);
+    background: rgba(59, 130, 246, 0.25);
     color: #93c5fd;
-    border-color: #3b82f6;
 
     &.active {
       background: #3b82f6;
       color: #fff;
-      box-shadow: 0 0 14px rgba(59, 130, 246, 0.6);
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
     }
 
-    &:hover:not(.active) { background: rgba(59, 130, 246, 0.35); }
+    &:hover:not(.active) {
+      background: rgba(59, 130, 246, 0.4);
+    }
   }
 
-  .click-hint { color: #93c5fd; font-family: 'Inter', sans-serif; }
-  .entering-msg { color: #93c5fd; font-family: 'Inter', sans-serif; }
-  .modern-label { color: #60a5fa; font-family: 'Inter', sans-serif; }
+  .click-hint {
+    color: #93c5fd;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .entering-msg {
+    color: #93c5fd;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .modern-label {
+    color: #60a5fa;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .locale-name {
+    color: rgba(255, 255, 255, 0.6);
+    font-family: 'Inter', sans-serif;
+  }
 }

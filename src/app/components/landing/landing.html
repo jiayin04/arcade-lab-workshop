@@ -6,54 +6,73 @@
   <!-- Subtle vignette -->
   <div class="vignette" aria-hidden="true"></div>
 
-  <!-- Overlay title (sits above canvas, pointer-events: none) -->
-  <div class="overlay" aria-label="Angular Arcade Lab landing">
-    <h1 class="title" i18n="@@landing.title">Angular Arcade Lab</h1>
-    <p class="subtitle" i18n="@@landing.subtitle">GDG On Campus · Workshop</p>
+  <!-- Overlay title -->
+  <div class="overlay" [attr.aria-label]="i18nService.t('landing.title')">
+    <h1 class="title">{{ i18nService.t('landing.title') }}</h1>
+    <p class="subtitle">{{ i18nService.t('landing.subtitle') }}</p>
   </div>
 
-  <!-- Mode toggle — top-right corner -->
-  <div class="mode-toggle" role="group" aria-label="Select theme">
-    <button
-      class="mode-btn retro-btn"
-      [class.active]="themeService.isRetro()"
-      (click)="themeService.setTheme('retro'); $event.stopPropagation()"
-      aria-label="Switch to retro theme"
-      i18n="@@theme.retro"
-    >RETRO</button>
-    <button
-      class="mode-btn modern-btn"
-      [class.active]="themeService.isModern()"
-      (click)="themeService.setTheme('modern'); $event.stopPropagation()"
-      aria-label="Switch to modern theme"
-      i18n="@@theme.modern"
-    >Modern</button>
+  <!-- ── Top-right controls row ── -->
+  <div class="top-controls">
+
+    <!-- Language toggle -->
+    <app-lang-toggle />
+
+    <!-- Divider -->
+    <div class="ctrl-sep" aria-hidden="true"></div>
+
+    <!-- Theme toggle -->
+    <div class="mode-toggle" role="group" aria-label="Select theme">
+      <button
+        class="mode-btn retro-btn"
+        [class.active]="themeService.isRetro()"
+        (click)="themeService.setTheme('retro'); $event.stopPropagation()"
+        aria-label="Switch to retro theme"
+      >{{ i18nService.t('theme.retro') }}</button>
+      <button
+        class="mode-btn modern-btn"
+        [class.active]="themeService.isModern()"
+        (click)="themeService.setTheme('modern'); $event.stopPropagation()"
+        aria-label="Switch to modern theme"
+      >{{ i18nService.t('theme.modern') }}</button>
+    </div>
+
   </div>
 
-  <!-- Click hint (hidden once entering) -->
+  <!-- Click hint / entering message -->
   @if (!entering()) {
-    <div class="click-hint" aria-live="polite" role="status" i18n="@@landing.hint">
+    <div class="click-hint" aria-live="polite" role="status">
       <span class="hint-arrow">▼</span>
-      CLICK LAPTOP TO ENTER
+      {{ i18nService.t('landing.hint') }}
       <span class="hint-arrow">▼</span>
     </div>
   } @else {
     <div class="entering-msg" aria-live="polite" role="status">
       @if (themeService.isRetro()) {
-        <span>BOOTING...</span>
+        <span>{{ i18nService.t('landing.booting') }}</span>
       } @else {
-        <span>Opening...</span>
+        <span>{{ i18nService.t('landing.opening') }}</span>
       }
     </div>
   }
 
-  <!-- Theme label (shows current theme name near laptop) -->
+  <!-- Theme label bottom-right -->
   <div class="theme-label" aria-live="polite">
     @if (themeService.isRetro()) {
       <span class="theme-label-text retro-label">◈ RETRO MODE</span>
     } @else {
       <span class="theme-label-text modern-label">◈ Modern Mode</span>
     }
+  </div>
+
+  <!-- Active locale indicator bottom-left -->
+  <div
+    class="locale-indicator"
+    aria-live="polite"
+    [attr.aria-label]="'Current language: ' + i18nService.activeOption().nativeName"
+  >
+    <span class="locale-flag" aria-hidden="true">{{ i18nService.activeOption().flag }}</span>
+    <span class="locale-name">{{ i18nService.activeOption().nativeName }}</span>
   </div>
 
 </div>

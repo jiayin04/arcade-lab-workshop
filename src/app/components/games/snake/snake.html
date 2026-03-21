@@ -1,13 +1,26 @@
-<app-games [title]="themeService.isRetro() ? '[ SNAKE.EXE ]' : 'Snake'">
-    <div class="snake-wrap">
-        <div class="hud">
-            <span class="score-tag" aria-live="polite" i18n="@@snake.score">SCORE: {{ score() }}</span>
-            <button class="gbtn" (click)="startGame()" aria-label="Start or restart snake game" i18n="@@snake.start">
-                {{ running() ? '↺ RESTART' : '▶ START' }}
-            </button>
-        </div>
-        <canvas #canvas [width]="COLS * CELL" [height]="ROWS * CELL" class="snake-canvas" tabindex="0"
-            aria-label="Snake game canvas. Use arrow keys or WASD to move." role="img"></canvas>
-        <p class="hint-text" i18n="@@snake.hint">Arrow keys or WASD to control the snake</p>
+<app-games [title]="themeService.isRetro() ? '[ SNAKE.EXE ]' : i18nService.t('snake.title')">
+  <div class="snake-wrap">
+
+    <div class="hud">
+      <span class="score-tag" aria-live="polite">
+        {{ i18nService.t('snake.score') }}: {{ score() }}
+      </span>
+      <button class="gbtn" (click)="startGame()" [attr.aria-label]="running() ? i18nService.t('snake.restart') : i18nService.t('snake.start')">
+        {{ running() ? i18nService.t('snake.restart') : i18nService.t('snake.start') }}
+      </button>
     </div>
+
+    <canvas
+      #canvas
+      [width]="COLS * CELL"
+      [height]="ROWS * CELL"
+      class="snake-canvas"
+      tabindex="0"
+      role="img"
+      [attr.aria-label]="i18nService.t('snake.hint')"
+    ></canvas>
+
+    <p class="hint-text">{{ i18nService.t('snake.hint') }}</p>
+
+  </div>
 </app-games>

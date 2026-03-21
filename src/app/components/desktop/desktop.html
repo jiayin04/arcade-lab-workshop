@@ -1,123 +1,76 @@
-<!-- <div class="desktop" [class]="themeService.themeClass()">
-
-      @if (themeService.isRetro()) {
-        <div class="scanline" aria-hidden="true"></div>
-      }
-
-      <header class="taskbar" role="banner">
-        <button class="back-btn" (click)="goBack()" aria-label="Back to landing" i18n="@@nav.back">
-          ← Back
-        </button>
-        <span class="taskbar-title" i18n="@@desktop.title">
-          {{ themeService.isRetro() ? 'ARCADE LAB v1.0' : 'Angular Arcade Lab' }}
-        </span>
-        <time class="clock" [attr.aria-label]="'Current time: ' + clock()">{{ clock() }}</time>
-      </header>
-
-      <main class="desktop-body" role="main">
-        <p class="desktop-hint" i18n="@@desktop.hint">
-          {{ themeService.isRetro() ? 'SELECT AN APP TO LAUNCH' : 'Click an app to open it' }}
-        </p>
-
-        <div class="icon-grid" role="list" aria-label="Available games">
-          @for (game of games; track game.id) {
-            <div
-              class="app-icon"
-              role="listitem"
-              [attr.tabindex]="0"
-              [attr.aria-label]="game.name + ' — ' + game.description"
-              (click)="launch(game)"
-              (keydown.enter)="launch(game)"
-              (keydown.space)="launch(game); $event.preventDefault()"
-            >
-              <div
-                class="icon-box"
-                [style.background]="themeService.isRetro() ? game.bgRetro : game.bgModern"
-                [class.icon-box--retro]="themeService.isRetro()"
-              >
-                <span class="icon-emoji" aria-hidden="true">{{ game.emoji }}</span>
-              </div>
-              <span class="icon-label">{{ game.name }}</span>
-            </div>
-          }
-        </div>
-      </main>
-
-      <footer class="statusbar" role="contentinfo">
-        <span i18n="@@status.name">Angular Arcade Lab</span>
-        <span>ARIA · i18n · Signals · OnPush</span>
-      </footer>
-
-    </div> -->
-
 <div class="desktop" [class.retro]="themeService.isRetro()" [class.modern]="themeService.isModern()">
 
-  <!-- ── Animated wallpaper canvas ── -->
+  <!-- Animated wallpaper canvas -->
   <canvas #wallpaper class="wallpaper" aria-hidden="true"></canvas>
 
-  <!-- ── Retro scanlines ── -->
+  <!-- Retro scanlines -->
   @if (themeService.isRetro()) {
-  <div class="scanlines" aria-hidden="true"></div>
+    <div class="scanlines" aria-hidden="true"></div>
   }
 
-  <!-- ── Desktop icon area (left-aligned column, Windows style) ── -->
-  <main class="icon-area" role="main" aria-label="Desktop">
+  <!-- Desktop icon area — left column, Windows style -->
+  <main class="icon-area" role="main" [attr.aria-label]="i18nService.t('desktop.hint')">
     <div class="icon-column" role="list" aria-label="Application shortcuts">
       @for (game of games; track game.id) {
-      <div class="desktop-icon" role="listitem" tabindex="0" [attr.aria-label]="game.name + ' — double-click to open'"
-        (dblclick)="launch(game)" (click)="selectIcon(game.id)" (keydown.enter)="launch(game)"
-        [class.selected]="selectedId() === game.id">
-        <!-- Icon image -->
-        <div class="icon-img-wrap">
-          <div class="icon-img" [style.background]="themeService.isRetro() ? game.bgRetro : game.bgModern">
-            <span class="icon-emoji" aria-hidden="true">{{ game.emoji }}</span>
-
-            <!-- Retro pixel overlay -->
-            @if (themeService.isRetro()) {
-            <div class="pixel-overlay" aria-hidden="true"></div>
-            }
+        <div
+          class="desktop-icon"
+          role="listitem"
+          tabindex="0"
+          [attr.aria-label]="i18nService.t(game.nameKey) + ' — ' + i18nService.t('desktop.dblclick')"
+          (dblclick)="launch(game)"
+          (click)="selectIcon(game.id)"
+          (click)="launch(game)"
+          [class.selected]="selectedId() === game.id"
+        >
+          <div class="icon-img-wrap">
+            <div
+              class="icon-img"
+              [style.background]="themeService.isRetro() ? game.bgRetro : game.bgModern"
+            >
+              <span class="icon-emoji" aria-hidden="true">{{ game.emoji }}</span>
+              @if (themeService.isRetro()) {
+                <div class="pixel-overlay" aria-hidden="true"></div>
+              }
+            </div>
           </div>
+          <span class="icon-label">{{ i18nService.t(game.nameKey) }}</span>
         </div>
-        <!-- Icon label -->
-        <span class="icon-label">{{ game.name }}</span>
-      </div>
       }
     </div>
   </main>
 
-  <!-- ── Taskbar (Windows-style bottom bar) ── -->
+  <!-- Taskbar -->
   <footer class="taskbar" role="toolbar" aria-label="Taskbar">
 
-    <!-- Start button -->
-    <button class="start-btn" (click)="goBack()" aria-label="Return to landing">
-      @if (themeService.isRetro()) {
+    <button class="start-btn" (click)="goBack()" [attr.aria-label]="i18nService.t('nav.back')">
       <span class="start-icon">⊞</span>
-      <span class="start-text" i18n="@@taskbar.start">START</span>
-      } @else {
-      <span class="start-icon modern-start">⊞</span>
+      @if (themeService.isRetro()) {
+        <span class="start-text">{{ i18nService.t('taskbar.start') }}</span>
       }
     </button>
 
-    <!-- Divider -->
     <div class="taskbar-sep" aria-hidden="true"></div>
 
-    <!-- Running apps strip -->
     <div class="taskbar-apps" role="list" aria-label="Open windows">
       @for (game of games; track game.id) {
-      <button class="taskbar-app" role="listitem" [attr.aria-label]="'Open ' + game.name" (click)="launch(game)">
-        <span class="taskbar-emoji" aria-hidden="true">{{ game.emoji }}</span>
-        <span class="taskbar-label">{{ game.name }}</span>
-      </button>
+        <button
+          class="taskbar-app"
+          role="listitem"
+          [attr.aria-label]="i18nService.t(game.nameKey)"
+          (click)="launch(game)"
+        >
+          <span class="taskbar-emoji" aria-hidden="true">{{ game.emoji }}</span>
+          <span class="taskbar-label">{{ i18nService.t(game.nameKey) }}</span>
+        </button>
       }
     </div>
 
-    <!-- Right side: clock + theme toggle -->
     <div class="taskbar-right">
+      <app-lang-toggle [compact]="true" />
+      <div class="taskbar-sep" aria-hidden="true"></div>
       <div class="theme-pills" role="group" aria-label="Theme">
-        <button class="pill" [class.active]="themeService.isRetro()" (click)="themeService.setTheme('retro')"
-          aria-label="Retro theme">RETRO</button>
-        <button class="pill" [class.active]="themeService.isModern()" (click)="themeService.setTheme('modern')"
-          aria-label="Modern theme">Modern</button>
+        <button class="pill" [class.active]="themeService.isRetro()" (click)="themeService.setTheme('retro')">{{ i18nService.t('theme.retro') }}</button>
+        <button class="pill" [class.active]="themeService.isModern()" (click)="themeService.setTheme('modern')">{{ i18nService.t('theme.modern') }}</button>
       </div>
       <div class="taskbar-sep" aria-hidden="true"></div>
       <div class="clock-block" role="timer" [attr.aria-label]="'Time: ' + clock()">

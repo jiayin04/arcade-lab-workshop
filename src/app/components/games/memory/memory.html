@@ -1,41 +1,47 @@
-<app-games [title]="themeService.isRetro() ? '[ MEMORY.EXE ]' : 'Memory'">
-    <div class="memory-wrap">
+<app-games [title]="themeService.isRetro() ? '[ MEMORY.EXE ]' : i18nService.t('memory.title')">
+  <div class="memory-wrap">
 
-        <!-- HUD -->
-        <div class="hud">
-            <span class="score-tag" aria-live="polite" i18n="@@memory.pairs">
-                Pairs: {{ matchCount() }}/{{ TOTAL_PAIRS }}
-            </span>
-            <button class="gbtn" (click)="newGame()" aria-label="Start a new memory game" i18n="@@memory.new">
-                ↺ New Game
-            </button>
-        </div>
-
-        <!-- Card grid -->
-        <div class="card-grid" role="grid" aria-label="Memory card matching grid"
-            [attr.aria-description]="'Find ' + TOTAL_PAIRS + ' matching pairs of fruit'">
-            @for (card of cards(); track card.id) {
-            <div class="mem-card" [class.flipped]="card.flipped || card.matched" [class.matched]="card.matched"
-                role="gridcell" tabindex="0"
-                [attr.aria-label]="card.flipped || card.matched ? card.emoji + ' card, ' + (card.matched ? 'matched' : 'revealed') : 'Hidden card ' + (card.id + 1)"
-                [attr.aria-pressed]="card.flipped" (click)="flip(card.id)" (keydown.enter)="flip(card.id)"
-                (keydown.space)="flip(card.id); $event.preventDefault()">
-                <span class="card-face" aria-hidden="true">
-                    {{ card.flipped || card.matched ? card.emoji : '' }}
-                </span>
-            </div>
-            }
-        </div>
-
-        <!-- Win message -->
-        @if (won()) {
-        <div class="win-msg" role="alert" aria-live="assertive" i18n="@@memory.win">
-            🎉 All pairs matched!
-        </div>
-        }
-
-        <p class="hint-text" i18n="@@memory.hint">
-            Flip cards to find matching fruit pairs — Angular signals track every state change
-        </p>
+    <div class="hud">
+      <span class="score-tag" aria-live="polite">
+        {{ i18nService.t('memory.pairs') }}: {{ matchCount() }}/{{ TOTAL_PAIRS }}
+      </span>
+      <button class="gbtn" (click)="newGame()" [attr.aria-label]="i18nService.t('memory.new')">
+        {{ i18nService.t('memory.new') }}
+      </button>
     </div>
+
+    <div
+      class="card-grid"
+      role="grid"
+      aria-label="Memory card matching grid"
+    >
+      @for (card of cards(); track card.id) {
+        <div
+          class="mem-card"
+          [class.flipped]="card.flipped || card.matched"
+          [class.matched]="card.matched"
+          role="gridcell"
+          tabindex="0"
+          [attr.aria-label]="card.flipped || card.matched ? card.emoji : 'Hidden card ' + (card.id + 1)"
+          [attr.aria-pressed]="card.flipped"
+          (click)="flip(card.id)"
+          (keydown.enter)="flip(card.id)"
+          (keydown.space)="flip(card.id); $event.preventDefault()"
+        >
+          <span class="card-face" aria-hidden="true">
+            {{ card.flipped || card.matched ? card.emoji : '' }}
+          </span>
+        </div>
+      }
+    </div>
+
+    @if (won()) {
+      <div class="win-msg" role="alert" aria-live="assertive">
+        {{ i18nService.t('memory.win') }}
+      </div>
+    }
+
+    <p class="hint-text">{{ i18nService.t('memory.hint') }}</p>
+
+  </div>
 </app-games>

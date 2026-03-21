@@ -2,53 +2,55 @@ import {
   Component, inject, signal, OnInit, ChangeDetectionStrategy, ElementRef, ViewChild, AfterViewInit,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { ThemeService } from '../../services/theme';
+import { ThemeService } from '../../services/theme/theme';
 import { GameApp } from '../../models/models';
+import { I18nService } from '../../services/i18n/i18n';
+import { LangToggle } from '../lang-toggle/lang-toggle';
 
 
 const GAMES: GameApp[] = [
   {
     id: 'snake',
-    name: 'Snake',
+    nameKey: 'game.snake',
+    descKey: 'game.snake.desc',
     emoji: '🐍',
     route: '/game/snake',
     bgRetro: '#052e16',
     bgModern: '#f0fdf4',
-    description: 'Keyboard event binding',
   },
   {
     id: 'memory',
-    name: 'Memory',
+    nameKey: 'game.memory',
+    descKey: 'game.memory.desc',
     emoji: '🧠',
     route: '/game/memory',
     bgRetro: '#0f172a',
     bgModern: '#eff6ff',
-    description: 'Signal state management',
   },
   {
     id: 'quiz',
-    name: 'NG Quiz',
+    nameKey: 'game.quiz',
+    descKey: 'game.quiz.desc',
     emoji: '⚡',
     route: '/game/quiz',
     bgRetro: '#1c1917',
     bgModern: '#fefce8',
-    description: 'Angular trivia',
   },
   {
     id: 'jumper',
-    name: 'Jumper',
+    nameKey: 'game.jumper',
+    descKey: 'game.jumper.desc',
     emoji: '🏃',
     route: '/game/jumper',
     bgRetro: '#0c0a09',
     bgModern: '#fdf2f8',
-    description: 'Animation loop',
   },
 ];
 
 @Component({
   selector: 'app-desktop',
   standalone: true,
-  imports: [],
+  imports: [LangToggle],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './desktop.html',
   styleUrl: './desktop.scss',
@@ -58,6 +60,7 @@ export class Desktop implements OnInit {
 
   protected themeService = inject(ThemeService);
   private router = inject(Router);
+  protected i18nService = inject(I18nService);
 
   games = GAMES;
   clock = signal('00:00');
@@ -204,7 +207,7 @@ export class Desktop implements OnInit {
     ctx.save();
     ctx.font = 'bold 11px "Press Start 2P", monospace';
     ctx.textAlign = 'center';
-    ctx.fillStyle = `rgba(0,255,170,${0.15 + Math.sin(t * 1.5) * 0.05})`;
+    ctx.fillStyle = `rgba(0,255,255,${0.15 + Math.sin(t * 1.5) * 0.8})`;
     ctx.fillText('ANGULAR ARCADE LAB', W / 2, horizon - 110);
     ctx.restore();
   }
