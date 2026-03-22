@@ -1,0 +1,33 @@
+<div class="narr-overlay" role="dialog" aria-modal="true" [attr.aria-label]="er.narrLoc()">
+  <div class="narr-box">
+
+    <div class="narr-loc">{{ er.narrLoc() }}</div>
+
+    <div class="narr-text" aria-live="polite">
+      {{ displayText() }}<span class="cursor" [class.on]="typing()">|</span>
+    </div>
+
+    @if (!typing()) {
+
+      @if (er.narrChoices().length > 0) {
+        <div class="narr-choices" role="group" aria-label="Response options">
+          @for (c of er.narrChoices(); track c.label) {
+            <button class="narr-choice" (click)="c.action()">{{ c.label }}</button>
+          }
+        </div>
+      } @else {
+        <div
+          class="narr-cont"
+          role="button"
+          tabindex="0"
+          aria-label="Continue"
+          (click)="cont()"
+          (keydown.enter)="cont()"
+          (keydown.space)="cont(); $event.preventDefault()"
+        >[ CONTINUE ]</div>
+      }
+
+    }
+
+  </div>
+</div>

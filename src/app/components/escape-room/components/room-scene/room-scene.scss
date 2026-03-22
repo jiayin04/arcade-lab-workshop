@@ -1,0 +1,76 @@
+// FIX: host must fill parent flex item completely
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.room-wrap {
+  position: relative;
+  width: 100%;
+  flex: 1;              // fills all space given by the host
+  min-height: 0;        // allows flex child to shrink
+  overflow: hidden;
+}
+
+// FIX: canvas is position:absolute to fill the wrap fully
+// without disturbing flow — lets hotspot divs sit on top
+.room-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+// ── Hotspot overlay ───────────────────────────────────────────
+.hotspot {
+  position: absolute;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  // Tooltip label
+  &::after {
+    content: attr(data-label);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: #c8a96e;
+    background: rgba(0, 0, 0, 0.92);
+    padding: 4px 12px;
+    border: 1px solid rgba(200, 160, 80, 0.35);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+    letter-spacing: 1px;
+    z-index: 10;
+  }
+
+  &:hover::after  { opacity: 1; }
+  &:focus-visible { outline: 1px solid rgba(200, 160, 80, 0.55); outline-offset: 2px; }
+}
+
+.hs-ring {
+  width: 100%;
+  height: 100%;
+  border: 2px solid rgba(200, 160, 80, 0);
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+
+.hotspot:hover .hs-ring {
+  border-color: rgba(200, 160, 80, 0.65);
+  box-shadow: 0 0 20px rgba(200, 160, 80, 0.22);
+  animation: ringPulse 1.1s ease-in-out infinite;
+}
+
+@keyframes ringPulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(200, 160, 80, 0.18); }
+  50%       { box-shadow: 0 0 26px rgba(200, 160, 80, 0.52); }
+}

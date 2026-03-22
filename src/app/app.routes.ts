@@ -14,22 +14,17 @@ export const routes: Routes = [
   {
     path: 'game/snake',
     loadComponent: () =>
-      import('./components/games/snake/snake').then(m => m.Snake),
-  },
-  {
-    path: 'game/memory',
-    loadComponent: () =>
-      import('./components/games/memory/memory').then(m => m.Memory),
-  },
-  {
-    path: 'game/quiz',
-    loadComponent: () =>
-      import('./components/games/quiz/quiz').then(m => m.Quiz),
+      import('./components/games/components/snake/snake').then(m => m.Snake),
   },
   {
     path: 'game/jumper',
     loadComponent: () =>
-      import('./components/games/jumper/jumper').then(m => m.Jumper),
+      import('./components/games/components/jumper/jumper').then(m => m.Jumper),
+  },
+  {
+    path: 'escape-room/escape',
+    loadComponent: () =>
+      import('./components/escape-room/escape-room').then(m => m.EscapeRoom),
   },
   { path: '**', redirectTo: '' },
 ];

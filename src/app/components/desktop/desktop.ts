@@ -3,12 +3,21 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ThemeService } from '../../services/theme/theme';
-import { GameApp } from '../../models/models';
+import { GameApp } from '../games/models/models';
 import { I18nService } from '../../services/i18n/i18n';
 import { LangToggle } from '../lang-toggle/lang-toggle';
 
 
 const GAMES: GameApp[] = [
+   {
+    id: 'escape',
+    nameKey: 'game.escape',
+    descKey:  'game.escape.desc',
+    emoji: '🔐',
+    route: '/escape-room/escape',
+    bgRetro:  '#1e0845',
+    bgModern: '#1c1152',
+  },
   {
     id: 'snake',
     nameKey: 'game.snake',
@@ -16,25 +25,7 @@ const GAMES: GameApp[] = [
     emoji: '🐍',
     route: '/game/snake',
     bgRetro: '#052e16',
-    bgModern: '#f0fdf4',
-  },
-  {
-    id: 'memory',
-    nameKey: 'game.memory',
-    descKey: 'game.memory.desc',
-    emoji: '🧠',
-    route: '/game/memory',
-    bgRetro: '#0f172a',
-    bgModern: '#eff6ff',
-  },
-  {
-    id: 'quiz',
-    nameKey: 'game.quiz',
-    descKey: 'game.quiz.desc',
-    emoji: '⚡',
-    route: '/game/quiz',
-    bgRetro: '#1c1917',
-    bgModern: '#fefce8',
+    bgModern: '#0d1f13',
   },
   {
     id: 'jumper',
@@ -43,7 +34,7 @@ const GAMES: GameApp[] = [
     emoji: '🏃',
     route: '/game/jumper',
     bgRetro: '#0c0a09',
-    bgModern: '#fdf2f8',
+    bgModern: '#1a0d1a',
   },
 ];
 
@@ -215,22 +206,22 @@ export class Desktop implements OnInit {
   private drawModernWallpaper(ctx: CanvasRenderingContext2D, W: number, H: number): void {
     const t = this.wallT;
 
-    // Clean gradient base — Windows 11 aurora feel
+    // Deep dark base — near-black with a subtle blue-purple tint
     const base = ctx.createLinearGradient(0, 0, W, H);
-    base.addColorStop(0, '#dbeafe');
-    base.addColorStop(0.3, '#ede9fe');
-    base.addColorStop(0.6, '#fce7f3');
-    base.addColorStop(1, '#e0f2fe');
+    base.addColorStop(0, '#0a0e1a');
+    base.addColorStop(0.35, '#0d1020');
+    base.addColorStop(0.65, '#0f0d1e');
+    base.addColorStop(1, '#0a1018');
     ctx.fillStyle = base;
     ctx.fillRect(0, 0, W, H);
 
-    // Soft floating orbs (aurora blobs)
+    // Soft dark aurora orbs — muted so they don't overpower the UI
     const orbs = [
-      { x: 0.2, y: 0.3, r: 0.35, c1: 'rgba(96,165,250,0.35)', c2: 'transparent', speed: 0.7 },
-      { x: 0.7, y: 0.6, r: 0.4, c1: 'rgba(167,139,250,0.3)', c2: 'transparent', speed: 0.5 },
-      { x: 0.5, y: 0.1, r: 0.3, c1: 'rgba(244,114,182,0.28)', c2: 'transparent', speed: 0.9 },
-      { x: 0.85, y: 0.2, r: 0.28, c1: 'rgba(52,211,153,0.22)', c2: 'transparent', speed: 0.6 },
-      { x: 0.15, y: 0.8, r: 0.32, c1: 'rgba(251,191,36,0.2)', c2: 'transparent', speed: 0.8 },
+      { x: 0.15, y: 0.3, r: 0.38, c1: 'rgba(99,102,241,0.22)', c2: 'transparent', speed: 0.7 },
+      { x: 0.75, y: 0.55, r: 0.42, c1: 'rgba(139,92,246,0.18)', c2: 'transparent', speed: 0.5 },
+      { x: 0.5, y: 0.1, r: 0.3, c1: 'rgba(236,72,153,0.14)', c2: 'transparent', speed: 0.9 },
+      { x: 0.88, y: 0.25, r: 0.28, c1: 'rgba(20,184,166,0.12)', c2: 'transparent', speed: 0.6 },
+      { x: 0.1, y: 0.75, r: 0.32, c1: 'rgba(59,130,246,0.14)', c2: 'transparent', speed: 0.8 },
     ];
 
     orbs.forEach(o => {
@@ -247,13 +238,13 @@ export class Desktop implements OnInit {
     });
 
     // Subtle dot grid
-    ctx.fillStyle = 'rgba(99,102,241,0.06)';
+    ctx.fillStyle = 'rgba(99,102,241,0.04)';
     const spacing = 32;
     for (let x = spacing / 2; x < W; x += spacing) {
       for (let y = spacing / 2; y < H; y += spacing) {
         const dist = Math.sqrt((x - W / 2) ** 2 + (y - H / 2) ** 2);
         const pulse = 0.5 + 0.5 * Math.sin(t * 0.8 - dist / 120);
-        ctx.globalAlpha = 0.06 * pulse;
+        ctx.globalAlpha = 0.04 * pulse;
         ctx.beginPath();
         ctx.arc(x, y, 1.5, 0, Math.PI * 2);
         ctx.fill();

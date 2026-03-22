@@ -1,0 +1,28 @@
+<div class="room-wrap">
+
+  <!-- Canvas for rendered room scene -->
+  <canvas #canvas class="room-canvas"
+    aria-label="Escape room environment — use Tab to navigate interactive objects"></canvas>
+
+  <!-- ARIA-accessible hotspot overlay
+       Angular concept: @for over signal() array — re-renders when hotspots signal updates -->
+  @for (hs of hotspots(); track hs.label) {
+    <div
+      class="hotspot"
+      [style.left.px]="hs.x"
+      [style.top.px]="hs.y"
+      [style.width.px]="hs.w"
+      [style.height.px]="hs.h"
+      [attr.data-label]="hs.label"
+      [attr.aria-label]="hs.label"
+      role="button"
+      tabindex="0"
+      (click)="hs.action()"
+      (keydown.enter)="hs.action()"
+      (keydown.space)="hs.action(); $event.preventDefault()"
+    >
+      <div class="hs-ring" aria-hidden="true"></div>
+    </div>
+  }
+
+</div>

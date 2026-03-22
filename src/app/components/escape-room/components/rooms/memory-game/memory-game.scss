@@ -1,0 +1,86 @@
+.puz-title {
+  font-family: 'Special Elite', serif;
+  font-size: 22px;
+  color: #c8a96e;
+  text-align: center;
+}
+
+.puz-desc {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  color: rgba(200, 160, 80, 0.52);
+  line-height: 1.9;
+  text-align: center;
+  max-width: 480px;
+}
+
+.mem-hud {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.hud-val {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  color: rgba(200, 160, 80, 0.6);
+  letter-spacing: 1px;
+}
+
+.mem-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  max-width: 380px;
+  width: 100%;
+}
+
+.mem-card {
+  aspect-ratio: 1;
+  cursor: pointer;
+  perspective: 600px;
+  user-select: none;
+
+  &:focus-visible { outline: 1px solid rgba(200, 160, 80, 0.6); outline-offset: 2px; }
+  &.matched { opacity: 0.65; cursor: default; }
+}
+
+.mem-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.4s ease;
+}
+
+.mem-card.flip .mem-inner { transform: rotateY(180deg); }
+
+.mem-front, .mem-back {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+  border: 1px solid rgba(200, 160, 80, 0.14);
+}
+
+.mem-front {
+  background: #0a090e;
+  font-size: 26px;
+  transform: rotateY(180deg);
+}
+
+.mem-back {
+  background: #06050a;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 18px;
+  color: rgba(200, 160, 80, 0.1);
+
+  &::after { content: '?'; }
+}
+
+.mem-card.matched .mem-front {
+  border-color: rgba(200, 160, 80, 0.42);
+  background: #0d0b08;
+}
