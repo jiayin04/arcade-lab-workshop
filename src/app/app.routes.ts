@@ -12,11 +12,6 @@ export const routes: Routes = [
       import('./components/desktop/desktop').then(m => m.Desktop),
   },
   {
-    path: 'game/snake',
-    loadComponent: () =>
-      import('./components/games/components/snake/snake').then(m => m.Snake),
-  },
-  {
     path: 'game/jumper',
     loadComponent: () =>
       import('./components/games/components/jumper/jumper').then(m => m.Jumper),
