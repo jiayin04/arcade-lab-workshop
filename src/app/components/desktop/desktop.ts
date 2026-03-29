@@ -19,15 +19,6 @@ const GAMES: GameApp[] = [
     bgModern: '#1c1152',
   },
   {
-    id: 'snake',
-    nameKey: 'game.snake',
-    descKey: 'game.snake.desc',
-    emoji: '🐍',
-    route: '/game/snake',
-    bgRetro: '#052e16',
-    bgModern: '#0d1f13',
-  },
-  {
     id: 'jumper',
     nameKey: 'game.jumper',
     descKey: 'game.jumper.desc',

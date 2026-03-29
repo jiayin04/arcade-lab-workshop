@@ -1,4 +1,5 @@
-<div class="puz-title">Code Drop</div>
+<div class="code-drop-space">
+    <div class="puz-title">Code Drop</div>
 <div class="puz-desc">
     Service declarations are falling through the component tree.<br>
     Move the falling <code>inject()</code> call and land it on the matching component.<br>
@@ -10,8 +11,11 @@
 
 <div class="hud-row">
     <span class="hud-val" aria-live="polite">WIRED: {{ score() }}/{{ TOTAL }}</span>
-    <span class="hud-val" aria-live="polite">FUSES: {{ fusesDisplay() }}</span>
+    <span class="hud-val" aria-live="polite">FUSES: <span class="live-val">{{ fusesDisplay() }}</span></span>
     <button class="gbtn" (click)="startGame()">
         {{ running() ? '↺ RESTART' : '▶ START INJECTOR' }}
     </button>
 </div>
+
+</div>
+

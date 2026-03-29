@@ -6,19 +6,19 @@ import { EscapeRoomService } from '../../../service/escape-room';
 import { CodePiece, CodeSlot } from '../../../models/escape';
 
 const CD_PAIRS = [
-  { comp: 'UserDashboard', service: 'DataService'   },
-  { comp: 'LoginForm',     service: 'AuthService'   },
-  { comp: 'ActivityLog',  service: 'LogService'    },
-  { comp: 'NavGuard',      service: 'RouterService' },
+  { comp: 'UserDashboard', service: 'DataService' },
+  { comp: 'LoginForm', service: 'AuthService' },
+  { comp: 'ActivityLog', service: 'LogService' },
+  { comp: 'NavGuard', service: 'RouterService' },
 ];
 
-const CW = 480, CH = 300, SLOT_H = 55, PIECE_W = 138, PIECE_H = 30;
+const CW = 680, CH = 450, SLOT_H = 55, PIECE_W = 158, PIECE_H = 50;
 
 @Component({
   selector: 'app-code-drop',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl:'./code-drop.html',
+  templateUrl: './code-drop.html',
   styleUrl: './code-drop.scss',
 })
 export class CodeDrop implements AfterViewInit, OnDestroy {
@@ -28,8 +28,8 @@ export class CodeDrop implements AfterViewInit, OnDestroy {
 
   readonly CW = CW; readonly CH = CH; readonly TOTAL = CD_PAIRS.length;
 
-  score   = signal(0);
-  fuses   = signal(3);
+  score = signal(0);
+  fuses = signal(3);
   running = signal(false);
 
   fusesDisplay = () => Array(this.fuses()).fill('■').concat(Array(3 - this.fuses()).fill('□')).join(' ');
@@ -37,18 +37,18 @@ export class CodeDrop implements AfterViewInit, OnDestroy {
   private piece: CodePiece | null = null;
   private slots: CodeSlot[] = [];
   private queue: string[] = [];
-  private qIdx  = 0;
-  private raf   = 0;
+  private qIdx = 0;
+  private raf = 0;
   private frame = 0;
   private keys: Record<string, boolean> = {};
 
   ngAfterViewInit(): void { this.drawIdle(); }
-  ngOnDestroy(): void     { cancelAnimationFrame(this.raf); }
+  ngOnDestroy(): void { cancelAnimationFrame(this.raf); }
 
   @HostListener('window:keydown', ['$event'])
   onKD(e: KeyboardEvent): void {
     this.keys[e.key] = true;
-    if (['ArrowLeft','ArrowRight','a','d',' '].includes(e.key)) e.preventDefault();
+    if (['ArrowLeft', 'ArrowRight', 'a', 'd', ' '].includes(e.key)) e.preventDefault();
     if (e.key === ' ' && this.piece) this.piece.fast = true;
   }
 
@@ -65,9 +65,9 @@ export class CodeDrop implements AfterViewInit, OnDestroy {
     this.running.set(true);
     this.frame = 0;
     this.queue = CD_PAIRS.map(p => p.service).sort(() => Math.random() - 0.5);
-    this.qIdx  = 0;
+    this.qIdx = 0;
     const slotW = CW / CD_PAIRS.length;
-    this.slots  = CD_PAIRS.map((p, i): CodeSlot => ({
+    this.slots = CD_PAIRS.map((p, i): CodeSlot => ({
       x: i * slotW, w: slotW, comp: p.comp, service: p.service, wired: false,
     }));
     this.piece = null;
@@ -81,7 +81,7 @@ export class CodeDrop implements AfterViewInit, OnDestroy {
 
     const p = this.piece;
     if (p && !p.settled) {
-      if ((this.keys['ArrowLeft'] || this.keys['a']) && p.x > 2)           p.x -= 3.8;
+      if ((this.keys['ArrowLeft'] || this.keys['a']) && p.x > 2) p.x -= 3.8;
       if ((this.keys['ArrowRight'] || this.keys['d']) && p.x < CW - p.w - 2) p.x += 3.8;
       p.y += p.fast ? 7 : 1.6;
 
@@ -97,7 +97,10 @@ export class CodeDrop implements AfterViewInit, OnDestroy {
           this.fuses.update(f => f - 1);
         }
         setTimeout(() => {
-          if (this.running()) { this.piece = null; this.spawnPiece(); }
+          if (!this.running()) return;
+          if (this.fuses() <= 0) return;
+          this.piece = null;
+          this.spawnPiece();
         }, 280);
       }
     }
@@ -107,16 +110,16 @@ export class CodeDrop implements AfterViewInit, OnDestroy {
     if (this.fuses() <= 0) {
       this.running.set(false);
       ctx.fillStyle = 'rgba(0,0,0,0.72)'; ctx.fillRect(0, 0, CW, CH);
-      ctx.fillStyle = 'rgba(200,80,80,0.85)'; ctx.font = '11px "Share Tech Mono"'; ctx.textAlign = 'center';
+      ctx.fillStyle = 'rgba(200,80,80,0.85)'; ctx.font = '25px "Share Tech Mono"'; ctx.textAlign = 'center';
       ctx.fillText('INJECTOR OVERLOADED', CW / 2, CH / 2 - 8);
-      ctx.fillStyle = 'rgba(200,160,80,0.42)'; ctx.font = '9px "Share Tech Mono"';
+      ctx.fillStyle = 'rgba(200,160,80,0.42)'; ctx.font = '15px "Share Tech Mono"';
       ctx.fillText('Press ▶ START INJECTOR to retry', CW / 2, CH / 2 + 12);
       return;
     }
     if (this.score() >= CD_PAIRS.length) {
       this.running.set(false);
       ctx.fillStyle = 'rgba(0,0,0,0.72)'; ctx.fillRect(0, 0, CW, CH);
-      ctx.fillStyle = 'rgba(0,200,80,0.85)'; ctx.font = '11px "Share Tech Mono"'; ctx.textAlign = 'center';
+      ctx.fillStyle = 'rgba(0,200,80,0.85)'; ctx.font = '25px "Share Tech Mono"'; ctx.textAlign = 'center';
       ctx.fillText('inject() CHAIN RESTORED', CW / 2, CH / 2);
       setTimeout(() => this.er.solveTerminal(3), 1400);
       return;
@@ -138,11 +141,11 @@ export class CodeDrop implements AfterViewInit, OnDestroy {
       ctx.fillRect(s.x + 2, CH - SLOT_H, s.w - 4, SLOT_H - 2);
       ctx.strokeStyle = s.wired ? 'rgba(0,200,80,0.4)' : 'rgba(200,160,80,0.16)';
       ctx.lineWidth = 1; ctx.strokeRect(s.x + 2, CH - SLOT_H, s.w - 4, SLOT_H - 2);
-      ctx.fillStyle = s.wired ? 'rgba(0,200,80,0.8)' : 'rgba(200,160,80,0.38)';
-      ctx.font = '9px "Fira Code"'; ctx.textAlign = 'center';
+      ctx.fillStyle = s.wired ? 'rgba(0,200,80,0.8)' : 'rgba(200,160,80,0.6)';
+      ctx.font = '11px "Fira Code"'; ctx.textAlign = 'center';
       ctx.fillText(s.comp, s.x + s.w / 2, CH - SLOT_H + 17);
-      ctx.fillStyle = s.wired ? 'rgba(0,200,80,0.55)' : 'rgba(200,160,80,0.2)';
-      ctx.font = '8px "Fira Code"';
+      ctx.fillStyle = s.wired ? 'rgba(0,200,80,0.55)' : 'rgba(200,160,80,0.5)';
+      ctx.font = '9px "Fira Code"';
       ctx.fillText(s.wired ? `inject(${s.service})` : 'inject(?)', s.x + s.w / 2, CH - SLOT_H + 33);
     });
 
@@ -171,17 +174,25 @@ export class CodeDrop implements AfterViewInit, OnDestroy {
   private drawIdle(): void {
     const ctx = this.ctx(); if (!ctx) return;
     ctx.fillStyle = '#020206'; ctx.fillRect(0, 0, CW, CH);
-    ctx.fillStyle = 'rgba(200,160,80,0.28)'; ctx.font = '10px "Share Tech Mono"'; ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(200,160,80,0.28)'; ctx.font = '15px "Share Tech Mono"'; ctx.textAlign = 'center';
     ctx.fillText('PRESS ▶ START INJECTOR', CW / 2, CH / 2);
   }
 
   private spawnPiece(): void {
-    if (this.qIdx >= this.queue.length) {
-      this.queue = this.queue.sort(() => Math.random() - 0.5);
-      this.qIdx = 0;
-    }
-    const svc = this.queue[this.qIdx++];
-    this.piece = { x: CW / 2 - PIECE_W / 2, y: -PIECE_H - 5, w: PIECE_W, h: PIECE_H, svc, fast: false, settled: false };
+    const unwired = CD_PAIRS
+      .filter(p => !this.slots.find(s => s.service === p.service && s.wired))
+      .map(p => p.service);
+
+    if (unwired.length === 0) return;
+
+    // Pick randomly from the unwired pool
+    const svc = unwired[Math.floor(Math.random() * unwired.length)];
+    this.piece = {
+      x: CW / 2 - PIECE_W / 2,
+      y: -PIECE_H - 5,
+      w: PIECE_W, h: PIECE_H,
+      svc, fast: false, settled: false,
+    };
   }
 
   private ctx(): CanvasRenderingContext2D | null {

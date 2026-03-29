@@ -15,8 +15,6 @@
   overflow: hidden;
 }
 
-// FIX: canvas is position:absolute to fill the wrap fully
-// without disturbing flow — lets hotspot divs sit on top
 .room-canvas {
   position: absolute;
   inset: 0;

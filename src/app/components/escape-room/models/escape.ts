@@ -34,6 +34,7 @@ export interface DebugToken {
   valid: boolean;
   speed: number;
   collected: boolean;
+  validIndex: number;
 }
 
 export interface CodePiece {

@@ -215,7 +215,7 @@
 }
 
 .win-sub {
-  font-size: 11px;
+  font-size: 1rem;
   color: rgba(200, 160, 80, 0.38);
   letter-spacing: 3px;
 }
@@ -224,7 +224,7 @@
   display: flex;
   flex-direction: column;
   gap: 9px;
-  max-width: 480px;
+  max-width: 580px;
   width: 100%;
   text-align: left;
 }
@@ -232,10 +232,10 @@
 .win-concept {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 18px;
   background: #050a03;
   border: 1px solid rgba(0, 200, 80, 0.18);
-  padding: 11px 14px;
+  padding: 18px 14px;
   animation: conceptIn 0.4s ease both;
 
   @for $i from 1 through 4 {
@@ -244,16 +244,16 @@
 
   strong {
     font-family: 'Fira Code', monospace;
-    font-size: 10px;
+    font-size: 1rem;
     color: rgba(0, 200, 80, 0.75);
     display: block;
-    margin-bottom: 3px;
+    margin-bottom: 5px;
   }
 
   p {
     font-family: 'Share Tech Mono', monospace;
-    font-size: 10px;
-    color: rgba(200, 160, 80, 0.3);
+    font-size: 0.8rem;
+    color: rgba(200, 160, 80, 0.5);
     margin: 0;
     line-height: 1.5;
   }

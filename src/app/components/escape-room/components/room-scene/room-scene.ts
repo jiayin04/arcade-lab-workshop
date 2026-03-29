@@ -10,7 +10,7 @@ import { RoomHotspot, RoomId } from '../../models/escape';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './room-scene.html',
-  styleUrl:    './room-scene.scss',
+  styleUrl: './room-scene.scss',
 })
 export class RoomScene implements AfterViewInit, OnDestroy {
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
@@ -21,11 +21,11 @@ export class RoomScene implements AfterViewInit, OnDestroy {
   private cv!: HTMLCanvasElement;
   private ctx!: CanvasRenderingContext2D;
   private animId = 0;
-  private dustT  = 0;
+  private dustT = 0;
   private hsRegistered = false;
 
   ngAfterViewInit(): void {
-    this.cv  = this.canvasRef.nativeElement;
+    this.cv = this.canvasRef.nativeElement;
     this.ctx = this.cv.getContext('2d')!;
     this.resize();
     window.addEventListener('resize', this.onResize);
@@ -38,14 +38,14 @@ export class RoomScene implements AfterViewInit, OnDestroy {
   }
 
   private onResize = (): void => {
-    this.cv.width  = this.cv.offsetWidth  || window.innerWidth;
+    this.cv.width = this.cv.offsetWidth || window.innerWidth;
     this.cv.height = this.cv.offsetHeight || window.innerHeight;
     this.hsRegistered = false;
     this.hotspots.set([]);
   };
 
   private resize(): void {
-    this.cv.width  = this.cv.offsetWidth  || window.innerWidth;
+    this.cv.width = this.cv.offsetWidth || window.innerWidth;
     this.cv.height = this.cv.offsetHeight || window.innerHeight;
   }
 
@@ -58,7 +58,7 @@ export class RoomScene implements AfterViewInit, OnDestroy {
       this.hotspots.set([]);
       this.registerHotspots(id);
     }
-    if      (id === 0) this.drawServerRoom();
+    if (id === 0) this.drawServerRoom();
     else if (id === 1) this.drawCorridor();
     else if (id === 2) this.drawMainframe();
   }
@@ -87,9 +87,12 @@ export class RoomScene implements AfterViewInit, OnDestroy {
           x: W * 0.88, y: H * 0.2, w: W * 0.1, h: H * 0.35,
           label: 'CORRIDOR →',
           action: () => {
+            // TODO: Uncomment
             if (!this.er.solved()[0] || !this.er.solved()[1]) {
               this.narr('SEALED DOOR', ['Restore Terminal 01 and Terminal 02 first.'], [], null);
-            } else { this.transitionRoom(1); }
+            } else {
+              this.transitionRoom(1);
+            }
           },
         },
       ]);
@@ -102,9 +105,12 @@ export class RoomScene implements AfterViewInit, OnDestroy {
         {
           x: dx, y: dy, w: dw, h: dh, label: 'MAINFRAME ROOM',
           action: () => {
+            // TODO: Uncomment
             if (!this.er.solved()[2]) {
               this.narr('LOCKED', ['Fix Terminal 03 first to unlock the mainframe.'], [], null);
-            } else { this.transitionRoom(2); }
+            } else {
+              this.transitionRoom(2);
+            }
           },
         },
         { x: px, y: py, w: pw, h: ph, label: 'TERMINAL-03 [TEMPLATE DEBUGGER]', action: () => this.interactTerminal(2) },
@@ -532,7 +538,7 @@ export class RoomScene implements AfterViewInit, OnDestroy {
     c.fillRect(mx + mw - 4, my, 4, mh);
 
     // ── Tape reels ──
-    ([[mx + mw * 0.2, my + mh * 0.24], [mx + mw * 0.8, my + mh * 0.24]] as [number,number][]).forEach(([rpx, rpy]) => {
+    ([[mx + mw * 0.2, my + mh * 0.24], [mx + mw * 0.8, my + mh * 0.24]] as [number, number][]).forEach(([rpx, rpy]) => {
       const r = mw * 0.13;
       // Reel housing
       c.fillStyle = '#181425';
@@ -642,6 +648,7 @@ export class RoomScene implements AfterViewInit, OnDestroy {
 
     if (id === 1 && !(window as any)['_erN1']) {
       (window as any)['_erN1'] = true;
+      // TODO: Uncomment
       setTimeout(() => this.narr('CORRIDOR B', [
         'The corridor smells of burnt solder.',
         'Terminal 03 is mounted on the wall to your right.',
@@ -651,6 +658,7 @@ export class RoomScene implements AfterViewInit, OnDestroy {
     }
     if (id === 2 && !(window as any)['_erN2']) {
       (window as any)['_erN2'] = true;
+      // TODO: Uncomment
       setTimeout(() => this.narr('MAINFRAME — RESTRICTED', [
         'The mainframe hums with residual power.',
         'Tape reels spin slowly — still processing something.',
@@ -673,8 +681,8 @@ export class RoomScene implements AfterViewInit, OnDestroy {
     }
     const t = TERMINALS[i];
     // TODO: CHANGE BACK
-    this.er.goGame(i);
-    // this.er.goNarrative(t.loc, t.lines, [], () => this.er.goGame(i));
+    // this.er.goGame(i);
+    this.er.goNarrative(t.loc, t.lines, [], () => this.er.goGame(i));
   }
 
   private narr(loc: string, lines: string[], choices: any[], cb: (() => void) | null): void {

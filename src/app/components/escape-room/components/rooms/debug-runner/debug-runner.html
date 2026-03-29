@@ -1,18 +1,21 @@
-<div class="puz-title">Template Debugger</div>
-<div class="puz-desc">
-    A rogue bug is corrupting template tokens mid-compilation.<br>
-    Collect <span class="valid-col">VALID</span> Angular binding syntax — dodge the <span class="bad-col">broken</span>
-    ones.<br>
-    <span class="key-hint">← → Arrow keys or A/D to move</span>
-</div>
+<div class="debug-runner-space">
+    <div class="puz-title">Template Debugger</div>
+    <div class="puz-desc">
+        A rogue bug is corrupting template tokens mid-compilation.<br>
+        Collect <span class="valid-col">VALID</span> Angular binding syntax — dodge the <span
+            class="bad-col">broken</span>
+        ones.<br>
+        <span class="key-hint">← → Arrow keys or A/D to move</span>
+    </div>
 
-<canvas #canvas [width]="W" [height]="H" class="game-canvas"
-    aria-label="Debug runner game — use arrow keys to move left and right"></canvas>
+    <canvas #canvas [width]="W" [height]="H" class="game-canvas"
+        aria-label="Debug runner game — use arrow keys to move left and right"></canvas>
 
-<div class="hud-row">
-    <span class="hud-val" aria-live="polite">COLLECTED: {{ score() }}/{{ TOTAL }}</span>
-    <span class="hud-val" aria-live="polite">LIVES: {{ livesDisplay() }}</span>
-    <button class="gbtn" (click)="startGame()">
-        {{ running() ? '↺ RESTART' : '▶ RUN DEBUGGER' }}
-    </button>
+    <div class="hud-row">
+        <span class="hud-val" aria-live="polite">COLLECTED: {{ score() }}/{{ TOTAL }}</span>
+        <span class="hud-val" aria-live="polite">LIVES: <span class="live-val">{{ livesDisplay() }}</span></span>
+        <button class="gbtn" (click)="startGame()">
+            {{ running() ? '↺ RESTART' : '▶ RUN DEBUGGER' }}
+        </button>
+    </div>
 </div>

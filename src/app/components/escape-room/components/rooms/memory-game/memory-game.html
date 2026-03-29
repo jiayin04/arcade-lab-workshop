@@ -1,24 +1,36 @@
-<div class="puz-title">Component Reconstruction</div>
-<div class="puz-desc">
-    Match each Angular concept to its pair.<br>
-    Rebuilds the component tree architecture.
-</div>
-
-<div class="mem-hud">
-    <span class="hud-val" aria-live="polite">PAIRS: {{ matchCount() }}/{{ TOTAL }}</span>
-</div>
-
-<div class="mem-grid" role="grid" aria-label="Memory matching grid">
-    @for (card of cards(); track card.id) {
-    <div class="mem-card" [class.flip]="card.flipped || card.matched" [class.matched]="card.matched" role="gridcell"
-        tabindex="0"
-        [attr.aria-label]="card.flipped || card.matched ? card.label + ' — ' + (card.matched ? 'matched' : 'revealed') : 'Hidden card'"
-        (click)="flip(card.id)" (keydown.enter)="flip(card.id)"
-        (keydown.space)="flip(card.id); $event.preventDefault()">
-        <div class="mem-inner">
-            <div class="mem-back" aria-hidden="true"></div>
-            <div class="mem-front" aria-hidden="true">{{ card.emoji }}</div>
-        </div>
+<div class="puz-com">
+    <div class="puz-title">Component Reconstruction</div>
+    <div class="puz-desc">
+        Match each element to its pair.<br>
+        Rebuilds the component tree architecture.
     </div>
-    }
+
+    <div class="mem-hud">
+        <span class="hud-val" aria-live="polite">PAIRS: {{ matchCount() }}/{{ TOTAL }}</span>
+    </div>
+
+
+    <div class="mem-grid" role="grid" aria-label="Memory matching grid">
+        @for (card of cards(); track card.id) {
+        <div class="mem-card" [class.flip]="card.flipped || card.matched" [class.matched]="card.matched" role="gridcell"
+            tabindex="0"
+            [attr.aria-label]="card.flipped || card.matched ? card.label + ' — ' + (card.matched ? 'matched' : 'revealed') : 'Hidden card'"
+            (click)="flip(card.id)" (keydown.enter)="flip(card.id)"
+            (keydown.space)="flip(card.id); $event.preventDefault()">
+            <div class="mem-inner">
+                <div class="mem-back" aria-hidden="true"></div>
+                <div class="mem-front" aria-hidden="true">{{ card.emoji }}</div>
+            </div>
+        </div>
+        }
+    </div>
 </div>
+
+@if (flashcard(); as card) {
+<div class="flash-card" [class.closing]="isClosing()" role="status" aria-live="polite" (click)="closeFlashCard()">
+    <div class="flash-emoji">{{ card.emoji }}</div>
+    <div class="flash-label">{{ card.label }}</div>
+    <div class="flash-desc">{{ card.description }}</div>
+    <div class="flash-hint">Tap to dismiss</div>
+</div>
+}

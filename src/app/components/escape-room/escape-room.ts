@@ -35,17 +35,17 @@ export class EscapeRoom {
   /** TODO: Entry point — show opening narrative then go to room */
   startIntro(): void {
     this.er.goRoom();
-    // this.er.goNarrative(
-    //   'SERVER ROOM B-4',
-    //   [
-    //     'The emergency lights cast everything red.',
-    //     'Somewhere, a fan spins down to silence.',
-    //     'Three terminals are dark. One blinks with a corrupted prompt.',
-    //     'You need to fix the reactivity system first.',
-    //   ],
-    //   [],
-    //   () => this.er.goRoom()
-    // );
+    this.er.goNarrative(
+      'SERVER ROOM B-4',
+      [
+        'The emergency lights cast everything red.',
+        'Somewhere, a fan spins down to silence.',
+        'Three terminals are dark. One blinks with a corrupted prompt.',
+        'You need to fix the reactivity system first.',
+      ],
+      [],
+      () => this.er.goRoom()
+    );
   }
 
   exitToDesktop(): void {
