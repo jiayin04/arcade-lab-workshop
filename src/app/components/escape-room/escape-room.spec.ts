@@ -1,6 +1,9 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EscapeRoom } from './models/escape-room';
+import { AppDataService } from '../../services/app-data/app-data';
+import { EscapeRoom } from './escape-room';
 
 describe('EscapeRoom', () => {
   let component: EscapeRoom;
@@ -8,7 +11,8 @@ describe('EscapeRoom', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EscapeRoom]
+      imports: [EscapeRoom],
+      providers: [provideHttpClient(), provideHttpClientTesting(), AppDataService],
     })
     .compileComponents();
 

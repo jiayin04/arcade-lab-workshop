@@ -1,12 +1,11 @@
 import {
   Component, inject, OnDestroy, AfterViewInit,
-  ViewChild, ElementRef, ChangeDetectionStrategy, signal, HostListener,
+  ViewChild, ElementRef, ChangeDetectionStrategy, signal, HostListener, computed,
 } from '@angular/core';
 import { EscapeRoomService } from '../../../service/escape-room';
 import { DebugToken } from '../../../models/escape';
+import { AppDataService } from '../../../../../services/app-data/app-data';
 
-const VALID = ['[value]', '(click)', '[(ngModel)]', '*ngFor', '[class]', '(change)'];
-const INVALID = ['{{ngFor}}', '[click]', '(value)=', 'ngModel', '*ngClass=', '#ref()'];
 const W = 650, H = 460, GROUND = H - 22, PW = 52, PH = 6;
 
 const MOVE_KEYS = ['ArrowLeft', 'ArrowRight', 'a', 'd'];
@@ -22,8 +21,22 @@ export class DebugRunner implements AfterViewInit, OnDestroy {
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
 
   protected er = inject(EscapeRoomService);
+  private appData = inject(AppDataService);
 
-  readonly W = W; readonly H = H; readonly TOTAL = VALID.length;
+  readonly W = W; readonly H = H;
+  readonly TOTAL = computed(() => this.validList().length);
+
+  private validList(): string[] {
+    return this.appData.escapeRoomContent()?.debugRunner.valid ?? [];
+  }
+
+  private invalidList(): string[] {
+    return this.appData.escapeRoomContent()?.debugRunner.invalid ?? [];
+  }
+
+  private drUi() {
+    return this.appData.escapeRoomContent()?.debugRunner.ui;
+  }
 
   score = signal(0);
   lives = signal(3);
@@ -56,10 +69,12 @@ export class DebugRunner implements AfterViewInit, OnDestroy {
 
   // ── Public ───────────────────────────────────────────────────────────────
   startGame(): void {
+    if (this.validList().length === 0) return;
+
     cancelAnimationFrame(this.raf);
     this.px = W / 2 - PW / 2;
     this.tokens = [];
-    this.validLeft = [...VALID];
+    this.validLeft = [...this.validList()];
     this.inFlight.clear();
     this.frame = 0;
     this.score.set(0);
@@ -83,7 +98,7 @@ export class DebugRunner implements AfterViewInit, OnDestroy {
       this.endGame(ctx, false);
       return;
     }
-    if (this.score() >= VALID.length) {
+    if (this.score() >= this.validList().length) {
       this.endGame(ctx, true);
       return;
     }
@@ -137,12 +152,18 @@ export class DebugRunner implements AfterViewInit, OnDestroy {
   }
 
   private endGame(ctx: CanvasRenderingContext2D, won: boolean): void {
+    const ui = this.drUi();
     this.running.set(false);
     if (won) {
-      this.drawMessage(ctx, 'ALL BINDINGS RESTORED', 'rgba(0,200,80,0.85)');
+      this.drawMessage(ctx, ui?.winTitle ?? 'ALL BINDINGS RESTORED', 'rgba(0,200,80,0.85)');
       setTimeout(() => this.er.solveTerminal(2), 1400);
     } else {
-      this.drawMessage(ctx, 'TEMPLATE CORRUPTED', 'rgba(200,80,80,0.85)', 'Press ▶ RUN DEBUGGER to retry');
+      this.drawMessage(
+        ctx,
+        ui?.loseTitle ?? 'TEMPLATE CORRUPTED',
+        'rgba(200,80,80,0.85)',
+        ui?.loseRetry ?? 'Press ▶ RUN DEBUGGER to retry'
+      );
     }
   }
 
@@ -153,7 +174,8 @@ export class DebugRunner implements AfterViewInit, OnDestroy {
       .filter(i => !this.inFlight.has(i));
 
     const spawnValid = availableIndices.length > 0 && Math.random() > 0.42;
-    const progress = this.score() / VALID.length;  // 0.0 → 1.0
+    const vl = this.validList();
+    const progress = vl.length ? this.score() / vl.length : 0;
     const speedBoost = progress * 1.2;
 
     let text: string;
@@ -164,8 +186,11 @@ export class DebugRunner implements AfterViewInit, OnDestroy {
       text = this.validLeft[validIndex];
       this.inFlight.add(validIndex);
     } else {
-      text = INVALID[Math.floor(Math.random() * INVALID.length)];
+      const inv = this.invalidList();
+      text = inv.length ? inv[Math.floor(Math.random() * inv.length)] : '';
     }
+
+    if (!text) return;
 
     this.tokens.push({
       x: Math.random() * (W - 110) + 5,
@@ -248,13 +273,14 @@ export class DebugRunner implements AfterViewInit, OnDestroy {
     const ctx = this.ctx();
     if (!ctx) return;
 
+    const ui = this.drUi();
     ctx.fillStyle = '#020206'; ctx.fillRect(0, 0, W, H);
     ctx.strokeStyle = 'rgba(200,160,80,0.14)'; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(0, GROUND); ctx.lineTo(W, GROUND); ctx.stroke();
     ctx.fillStyle = 'rgba(200,160,80,0.28)';
     ctx.font = '15px "Share Tech Mono"';
     ctx.textAlign = 'center';
-    ctx.fillText('PRESS ▶ RUN DEBUGGER', W / 2, H / 2);
+    ctx.fillText(ui?.idle ?? 'PRESS ▶ RUN DEBUGGER', W / 2, H / 2);
   }
 
   // ── Util ──────────────────────────────────────────────────────────────────

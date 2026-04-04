@@ -1,46 +1,61 @@
+:host {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .puz-com {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  max-width: min(480px, 100%);
+  margin: 0 auto;
+  padding: 0 clamp(4px, 2vw, 12px);
+  box-sizing: border-box;
 }
 
 .puz-title {
   font-family: 'Special Elite', serif;
-  font-size: 2.3rem;
+  font-size: clamp(1.1rem, 3.8vw, 2.3rem);
   color: #c8a96e;
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: clamp(12px, 3vw, 28px);
+  line-height: 1.15;
 }
 
 .puz-desc {
   font-family: 'Share Tech Mono', monospace;
-  font-size: 0.8rem;
+  font-size: clamp(0.65rem, 2.2vw, 0.8rem);
   color: rgba(200, 160, 80, 0.62);
-  line-height: 1.9;
+  line-height: 1.75;
   text-align: center;
   max-width: 480px;
-  margin-bottom: 20px;
+  width: 100%;
+  margin-bottom: clamp(10px, 2.5vw, 20px);
 }
 
 .mem-hud {
   display: flex;
   justify-content: center;
   margin-bottom: 8px;
+  width: 100%;
 }
 
 .hud-val {
   font-family: 'Share Tech Mono', monospace;
-  font-size: 0.8rem;
+  font-size: clamp(0.65rem, 2.2vw, 0.8rem);
   color: rgba(200, 160, 80, 0.6);
-  letter-spacing: 1px;
+  letter-spacing: 0.05em;
 }
 
 .mem-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  max-width: 440px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(4px, 2vw, 10px);
   width: 100%;
+  max-width: min(440px, 100%);
+  box-sizing: border-box;
 }
 
 .mem-card {
@@ -48,6 +63,7 @@
   cursor: pointer;
   perspective: 600px;
   user-select: none;
+  min-width: 0;
 
   &:focus-visible {
     outline: 1px solid rgba(200, 160, 80, 0.6);
@@ -85,14 +101,14 @@
 
 .mem-front {
   background: #0a090e;
-  font-size: 26px;
+  font-size: clamp(16px, 5.5vw, 26px);
   transform: rotateY(180deg);
 }
 
 .mem-back {
   background: #06050a;
   font-family: 'Share Tech Mono', monospace;
-  font-size: 18px;
+  font-size: clamp(12px, 3.5vw, 18px);
   color: rgba(200, 160, 80, 0.45);
 
   &::after {
@@ -108,16 +124,17 @@
 .flash-card {
   position: fixed;
   top: 50%;
-  left: 85%;
-  transform: translateX(-50%);
+  left: 50%;
+  z-index: 100;
+  transform: translate(-50%, -50%);
+  max-width: min(360px, calc(100vw - 24px));
+  width: min(360px, calc(100vw - 24px));
+  padding: clamp(14px, 4vw, 20px) clamp(16px, 4vw, 28px);
   background: #0d0b08;
   border: 1px solid rgba(200, 160, 80, 0.5);
-  padding: 20px 28px;
-  max-width: 360px;
-  width: calc(100% - 48px);
   cursor: pointer;
-  animation: flash-in 0.8s ease;
-  z-index: 100;
+  animation: flash-in 0.8s ease forwards;
+  box-sizing: border-box;
 
   &.closing {
     animation: flash-out 0.3s ease forwards;
@@ -126,50 +143,50 @@
   @keyframes flash-in {
     from {
       opacity: 0;
-      transform: translateX(-50%) translateY(12px);
+      transform: translate(-50%, -50%) translateY(12px);
     }
 
     to {
       opacity: 1;
-      transform: translateX(-50%) translateY(0);
+      transform: translate(-50%, -50%) translateY(0);
     }
   }
 
   @keyframes flash-out {
     from {
       opacity: 0.8;
-      transform: translateX(-50%) translateY(0);
+      transform: translate(-50%, -50%) translateY(0);
     }
 
     to {
       opacity: 0;
-      transform: translateX(-50%) translateY(12px);
+      transform: translate(-50%, -50%) translateY(12px);
     }
   }
 }
 
 .flash-emoji {
-  font-size: 32px;
+  font-size: clamp(26px, 7vw, 32px);
   margin-bottom: 10px;
 }
 
 .flash-label {
   font-family: 'Share Tech Mono', monospace;
-  font-size: 1rem;
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
   color: #c8a96e;
   margin-bottom: 8px;
 }
 
 .flash-desc {
   font-family: 'Share Tech Mono', monospace;
-  font-size: 0.75rem;
+  font-size: clamp(0.65rem, 2.2vw, 0.75rem);
   color: rgba(200, 160, 80, 0.65);
-  line-height: 1.7;
+  line-height: 1.65;
 }
 
 .flash-hint {
   font-family: 'Share Tech Mono', monospace;
-  font-size: 0.65rem;
+  font-size: clamp(0.55rem, 2vw, 0.65rem);
   color: rgba(200, 160, 80, 0.45);
   margin-top: 12px;
   letter-spacing: 1px;

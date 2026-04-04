@@ -2,7 +2,8 @@ import {
   Component, inject, AfterViewInit, OnDestroy,
   ElementRef, ViewChild, ChangeDetectionStrategy, signal,
 } from '@angular/core';
-import { EscapeRoomService, TERMINALS } from '../../service/escape-room';
+import { EscapeRoomService } from '../../service/escape-room';
+import { AppDataService } from '../../../../services/app-data/app-data';
 import { RoomHotspot, RoomId } from '../../models/escape';
 
 @Component({
@@ -16,6 +17,7 @@ export class RoomScene implements AfterViewInit, OnDestroy {
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
 
   protected er = inject(EscapeRoomService);
+  private appData = inject(AppDataService);
   hotspots = signal<RoomHotspot[]>([]);
 
   private cv!: HTMLCanvasElement;
@@ -89,7 +91,8 @@ export class RoomScene implements AfterViewInit, OnDestroy {
           action: () => {
             // TODO: Uncomment
             if (!this.er.solved()[0] || !this.er.solved()[1]) {
-              this.narr('SEALED DOOR', ['Restore Terminal 01 and Terminal 02 first.'], [], null);
+              const b = this.appData.escapeRoomContent()?.roomScene.sealedDoor;
+              this.narr(b?.loc ?? 'SEALED DOOR', b?.lines ?? ['Restore Terminal 01 and Terminal 02 first.'], [], null);
             } else {
               this.transitionRoom(1);
             }
@@ -107,7 +110,8 @@ export class RoomScene implements AfterViewInit, OnDestroy {
           action: () => {
             // TODO: Uncomment
             if (!this.er.solved()[2]) {
-              this.narr('LOCKED', ['Fix Terminal 03 first to unlock the mainframe.'], [], null);
+              const b = this.appData.escapeRoomContent()?.roomScene.lockedMainframe;
+              this.narr(b?.loc ?? 'LOCKED', b?.lines ?? ['Fix Terminal 03 first to unlock the mainframe.'], [], null);
             } else {
               this.transitionRoom(2);
             }
@@ -648,23 +652,37 @@ export class RoomScene implements AfterViewInit, OnDestroy {
 
     if (id === 1 && !(window as any)['_erN1']) {
       (window as any)['_erN1'] = true;
-      // TODO: Uncomment
-      setTimeout(() => this.narr('CORRIDOR B', [
-        'The corridor smells of burnt solder.',
-        'Terminal 03 is mounted on the wall to your right.',
-        'The mainframe door is straight ahead — locked.',
-        'Fix the template binding system first.',
-      ], [], null), 120);
+      setTimeout(() => {
+        const b = this.appData.escapeRoomContent()?.roomScene.corridorB;
+        this.narr(
+          b?.loc ?? 'CORRIDOR B',
+          b?.lines ?? [
+            'The corridor smells of burnt solder.',
+            'Terminal 03 is mounted on the wall to your right.',
+            'The mainframe door is straight ahead — locked.',
+            'Fix the template binding system first.',
+          ],
+          [],
+          null
+        );
+      }, 120);
     }
     if (id === 2 && !(window as any)['_erN2']) {
       (window as any)['_erN2'] = true;
-      // TODO: Uncomment
-      setTimeout(() => this.narr('MAINFRAME — RESTRICTED', [
-        'The mainframe hums with residual power.',
-        'Tape reels spin slowly — still processing something.',
-        'The dependency injector is the final broken system.',
-        'Wire it correctly and the app reboots.',
-      ], [], null), 120);
+      setTimeout(() => {
+        const b = this.appData.escapeRoomContent()?.roomScene.mainframeRestricted;
+        this.narr(
+          b?.loc ?? 'MAINFRAME — RESTRICTED',
+          b?.lines ?? [
+            'The mainframe hums with residual power.',
+            'Tape reels spin slowly — still processing something.',
+            'The dependency injector is the final broken system.',
+            'Wire it correctly and the app reboots.',
+          ],
+          [],
+          null
+        );
+      }, 120);
     }
 
     setTimeout(() => {
@@ -676,10 +694,17 @@ export class RoomScene implements AfterViewInit, OnDestroy {
 
   private interactTerminal(i: number): void {
     if (this.er.solved()[i]) {
-      this.narr('TERMINAL ' + (i + 1), ['This system is already online.', 'Status: RESTORED.'], [], null);
+      const lines = this.appData.escapeRoomContent()?.roomScene.terminalSolved.lines;
+      this.narr(
+        'TERMINAL ' + (i + 1),
+        lines ?? ['This system is already online.', 'Status: RESTORED.'],
+        [],
+        null
+      );
       return;
     }
-    const t = TERMINALS[i];
+    const t = this.appData.terminals()[i];
+    if (!t) return;
     // TODO: CHANGE BACK
     // this.er.goGame(i);
     this.er.goNarrative(t.loc, t.lines, [], () => this.er.goGame(i));

@@ -1,16 +1,20 @@
-<div class="puz-title">Signal Stream</div>
-<div class="puz-desc">
+<div class="snake-game-root">
+  <div class="puz-title">Signal Stream</div>
+  <div class="puz-desc">
     Navigate the data packet through the signal network.<br>
     Collect {{ TARGET }} nodes to restore the reactive chain.<br>
     <span class="key-hint">Arrow keys or WASD</span>
-</div>
+  </div>
 
-<canvas #canvas [width]="COLS * CELL" [height]="ROWS * CELL" class="game-canvas" tabindex="0"
-    aria-label="Snake game — use arrow keys to move"></canvas>
+  <div class="canvas-shell canvas-shell--snake">
+    <canvas #canvas [width]="COLS * CELL" [height]="ROWS * CELL" class="game-canvas" tabindex="0"
+      aria-label="Snake game — use arrow keys to move"></canvas>
+  </div>
 
-<div class="hud-row">
+  <div class="hud-row">
     <span class="hud-val">NODES: <span>{{ score() }}</span>/{{ TARGET }}</span>
-    <button class="gbtn" (click)="startGame()">
-        {{ running() ? '↺ RESTART' : '▶ INITIALISE' }}
+    <button class="gbtn" type="button" (click)="startGame()">
+      {{ running() ? '↺ RESTART' : '▶ INITIALISE' }}
     </button>
+  </div>
 </div>

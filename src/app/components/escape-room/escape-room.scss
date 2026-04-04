@@ -162,28 +162,43 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 20px;
+  gap: 8px;
+  padding: clamp(8px, 2vw, 10px) clamp(10px, 3vw, 20px);
   background: rgba(0, 0, 0, 0.6);
   border-bottom: 1px solid rgba(200, 160, 80, 0.1);
   flex-shrink: 0;
+  min-width: 0;
 }
 
 .game-tag {
-  font-size: 1rem;
+  font-size: clamp(0.65rem, 2.2vw, 1rem);
   color: rgba(200, 160, 80, 0.729);
-  letter-spacing: 2px;
+  letter-spacing: 0.08em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  flex: 1;
+}
+
+.game-topbar .exit-btn {
+  flex-shrink: 0;
 }
 
 .game-body {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-evenly;
-  padding: 20px;
-  gap: 14px;
-  overflow: hidden;
-  // border: 1px solid white;
+  justify-content: flex-start;
+  padding: clamp(8px, 2.5vw, 20px);
+  gap: clamp(8px, 2vw, 16px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 // ── WIN ───────────────────────────────────────────────────────
@@ -297,4 +312,82 @@
 
   &:not(.primary):hover { color: rgba(200, 160, 80, 0.65); border-color: rgba(200, 160, 80, 0.4); }
   &:focus-visible { outline: 1px solid rgba(200, 160, 80, 0.5); outline-offset: 2px; }
+}
+
+// ── DEBUG PANEL ──────────────────────────────────────────────
+.debug-panel {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(255, 255, 0, 0.5);
+  border-radius: 4px;
+  padding: 10px;
+  z-index: 1000;
+  max-width: 300px;
+  font-size: 12px;
+
+  h3 {
+    margin: 0 0 10px 0;
+    color: #ffff00;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .debug-section {
+    margin-bottom: 10px;
+
+    strong {
+      display: block;
+      color: #ffff00;
+      margin-bottom: 5px;
+    }
+
+    button {
+      margin-right: 5px;
+      margin-bottom: 3px;
+      padding: 4px 8px;
+      font-size: 11px;
+      background: rgba(255, 255, 0, 0.1);
+      border: 1px solid rgba(255, 255, 0, 0.3);
+      color: #ffff00;
+      cursor: pointer;
+      border-radius: 2px;
+
+      &:hover {
+        background: rgba(255, 255, 0, 0.2);
+      }
+    }
+  }
+
+  .debug-toggle {
+    width: 100%;
+    padding: 5px;
+    background: rgba(255, 0, 0, 0.2);
+    border: 1px solid rgba(255, 0, 0, 0.5);
+    color: #ff6666;
+    cursor: pointer;
+    border-radius: 2px;
+
+    &:hover {
+      background: rgba(255, 0, 0, 0.3);
+    }
+  }
+}
+
+.debug-toggle.show-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: auto;
+  padding: 5px 10px;
+  background: rgba(0, 255, 0, 0.2);
+  border: 1px solid rgba(0, 255, 0, 0.5);
+  color: #66ff66;
+  font-size: 14px;
+  z-index: 1000;
+
+  &:hover {
+    background: rgba(0, 255, 0, 0.3);
+  }
 }

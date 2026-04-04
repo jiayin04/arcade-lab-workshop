@@ -11,7 +11,7 @@
   <!-- Desktop icon area — left column, Windows style -->
   <main class="icon-area" role="main" [attr.aria-label]="i18nService.t('desktop.hint')">
     <div class="icon-column" role="list" aria-label="Application shortcuts">
-      @for (game of games; track game.id) {
+      @for (game of appData.games(); track game.id) {
         <div
           class="desktop-icon"
           role="listitem"
@@ -52,7 +52,7 @@
     <div class="taskbar-sep" aria-hidden="true"></div>
 
     <div class="taskbar-apps" role="list" aria-label="Open windows">
-      @for (game of games; track game.id) {
+      @for (game of appData.games(); track game.id) {
         <button
           class="taskbar-app"
           role="listitem"

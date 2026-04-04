@@ -1,0 +1,110 @@
+{
+  "intro": {
+    "loc": "SERVER ROOM B-4",
+    "lines": [
+      "The emergency lights cast everything red.",
+      "Somewhere, a fan spins down to silence.",
+      "Three terminals are dark. One blinks with a corrupted prompt.",
+      "You need to fix the reactivity system first."
+    ]
+  },
+  "roomScene": {
+    "sealedDoor": {
+      "loc": "SEALED DOOR",
+      "lines": ["Restore Terminal 01 and Terminal 02 first."]
+    },
+    "lockedMainframe": {
+      "loc": "LOCKED",
+      "lines": ["Fix Terminal 03 first to unlock the mainframe."]
+    },
+    "corridorB": {
+      "loc": "CORRIDOR B",
+      "lines": [
+        "The corridor smells of burnt solder.",
+        "Terminal 03 is mounted on the wall to your right.",
+        "The mainframe door is straight ahead — locked.",
+        "Fix the template binding system first."
+      ]
+    },
+    "mainframeRestricted": {
+      "loc": "MAINFRAME — RESTRICTED",
+      "lines": [
+        "The mainframe hums with residual power.",
+        "Tape reels spin slowly — still processing something.",
+        "The dependency injector is the final broken system.",
+        "Wire it correctly and the app reboots."
+      ]
+    },
+    "terminalSolved": {
+      "lines": ["This system is already online.", "Status: RESTORED."]
+    }
+  },
+  "codeDrop": {
+    "pairs": [
+      { "comp": "UserDashboard", "service": "DataService" },
+      { "comp": "LoginForm", "service": "AuthService" },
+      { "comp": "ActivityLog", "service": "LogService" },
+      { "comp": "NavGuard", "service": "RouterService" }
+    ],
+    "ui": {
+      "idle": "PRESS ▶ START INJECTOR",
+      "overloadTitle": "INJECTOR OVERLOADED",
+      "overloadRetry": "Press ▶ START INJECTOR to retry",
+      "winTitle": "inject() CHAIN RESTORED"
+    }
+  },
+  "debugRunner": {
+    "valid": ["[value]", "(click)", "[(ngModel)]", "*ngFor", "[class]", "(change)"],
+    "invalid": ["{{ngFor}}", "[click]", "(value)=", "ngModel", "*ngClass=", "#ref()"],
+    "ui": {
+      "idle": "PRESS ▶ RUN DEBUGGER",
+      "winTitle": "ALL BINDINGS RESTORED",
+      "loseTitle": "TEMPLATE CORRUPTED",
+      "loseRetry": "Press ▶ RUN DEBUGGER to retry"
+    }
+  },
+  "memoryGame": {
+    "pairs": [
+      {
+        "emoji": "⚡",
+        "label": "signal()",
+        "description": "A reactive primitive that holds state. Reading it in a template creates a dependency; writing it triggers updates."
+      },
+      {
+        "emoji": "🔄",
+        "label": "computed()",
+        "description": "Derives a value from other signals. Re-evaluates lazily only when its dependencies change."
+      },
+      {
+        "emoji": "🧩",
+        "label": "component",
+        "description": "The basic UI building block — a class + template + styles packaged together with a selector."
+      },
+      {
+        "emoji": "🌲",
+        "label": "tree",
+        "description": "The component tree is Angular's internal graph of all live component instances, top-down."
+      },
+      {
+        "emoji": "💉",
+        "label": "inject()",
+        "description": "Functional API to retrieve a dependency from the current injection context without constructor params."
+      },
+      {
+        "emoji": "📦",
+        "label": "@NgModule",
+        "description": "The legacy organisational unit that declares, imports, and exports groups of related components/pipes."
+      },
+      {
+        "emoji": "🔗",
+        "label": "pipe",
+        "description": "A pure transform applied in templates via the | operator (e.g. date, async, currency)."
+      },
+      {
+        "emoji": "🎯",
+        "label": "directive",
+        "description": "A class that adds behaviour to a DOM element — structural ([ngIf]) or attribute ([ngClass])."
+      }
+    ]
+  }
+}

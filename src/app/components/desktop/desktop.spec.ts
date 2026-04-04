@@ -1,5 +1,8 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { AppDataService } from '../../services/app-data/app-data';
 import { Desktop } from './desktop';
 
 describe('Desktop', () => {
@@ -8,7 +11,8 @@ describe('Desktop', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Desktop]
+      imports: [Desktop],
+      providers: [provideHttpClient(), provideHttpClientTesting(), AppDataService],
     })
     .compileComponents();
 

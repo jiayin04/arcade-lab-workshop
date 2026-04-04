@@ -5,20 +5,10 @@ import {
   inject, signal,
 } from '@angular/core';
 import { EscapeRoomService } from '../../../service/escape-room';
+import { MemoryPairRow } from '../../../models/escape-room-content';
+import { AppDataService } from '../../../../../services/app-data/app-data';
 
 interface MemCard { id: number; emoji: string; label: string; description: string; flipped: boolean; matched: boolean; }
-
-// Angular concepts
-const PAIRS: [string, string, string][] = [
-  ['⚡', 'signal()', 'A reactive primitive that holds state. Reading it in a template creates a dependency; writing it triggers updates.'],
-  ['🔄', 'computed()', 'Derives a value from other signals. Re-evaluates lazily only when its dependencies change.'],
-  ['🧩', 'component', 'The basic UI building block — a class + template + styles packaged together with a selector.'],
-  ['🌲', 'tree', 'The component tree is Angular\'s internal graph of all live component instances, top-down.'],
-  ['💉', 'inject()', 'Functional API to retrieve a dependency from the current injection context without constructor params.'],
-  ['📦', '@NgModule', 'The legacy organisational unit that declares, imports, and exports groups of related components/pipes.'],
-  ['🔗', 'pipe', 'A pure transform applied in templates via the | operator (e.g. date, async, currency).'],
-  ['🎯', 'directive', 'A class that adds behaviour to a DOM element — structural ([ngIf]) or attribute ([ngClass]).'],
-];
 
 @Component({
   selector: 'app-memory-game',
@@ -29,8 +19,13 @@ const PAIRS: [string, string, string][] = [
 })
 export class MemoryGame {
   protected er = inject(EscapeRoomService);
+  private appData = inject(AppDataService);
 
-  readonly TOTAL = PAIRS.length;
+  private pairRows(): MemoryPairRow[] {
+    return this.appData.escapeRoomContent()?.memoryGame.pairs ?? [];
+  }
+
+  readonly TOTAL = computed(() => this.pairRows().length);
   isClosing = signal(false);
 
   flashcard = signal<{ emoji: string; label: string; description: string } | null>(null);
@@ -45,9 +40,17 @@ export class MemoryGame {
   constructor() { this.newGame(); }
 
   newGame(): void {
-    const deck = [...PAIRS, ...PAIRS]
+    const rows = this.pairRows();
+    const deck = [...rows, ...rows]
       .sort(() => Math.random() - 0.5)
-      .map(([emoji, label, description], id): MemCard => ({ id, emoji, label, description, flipped: false, matched: false }));
+      .map((row, id): MemCard => ({
+        id,
+        emoji: row.emoji,
+        label: row.label,
+        description: row.description,
+        flipped: false,
+        matched: false,
+      }));
     this.cards.set(deck);
     this.flipped.set([]);
     this.locked.set(false);
@@ -75,7 +78,7 @@ export class MemoryGame {
         if (this.flashTimer) clearTimeout(this.flashTimer);
         this.flashTimer = setTimeout(() => this.closeFlashCard(), 4000);
 
-        if (this.matchCount() >= this.TOTAL) {
+        if (this.matchCount() >= this.TOTAL()) {
           setTimeout(() => this.er.solveTerminal(1), 700);
         }
       } else {

@@ -3,31 +3,10 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ThemeService } from '../../services/theme/theme';
-import { GameApp } from '../games/models/models';
+import { GameApp } from '../../models/model';
 import { I18nService } from '../../services/i18n/i18n';
+import { AppDataService } from '../../services/app-data/app-data';
 import { LangToggle } from '../lang-toggle/lang-toggle';
-
-
-const GAMES: GameApp[] = [
-   {
-    id: 'escape',
-    nameKey: 'game.escape',
-    descKey:  'game.escape.desc',
-    emoji: '🔐',
-    route: '/escape-room/escape',
-    bgRetro:  '#1e0845',
-    bgModern: '#1c1152',
-  },
-  {
-    id: 'jumper',
-    nameKey: 'game.jumper',
-    descKey: 'game.jumper.desc',
-    emoji: '🏃',
-    route: '/game/jumper',
-    bgRetro: '#0c0a09',
-    bgModern: '#1a0d1a',
-  },
-];
 
 @Component({
   selector: 'app-desktop',
@@ -43,8 +22,7 @@ export class Desktop implements OnInit {
   protected themeService = inject(ThemeService);
   private router = inject(Router);
   protected i18nService = inject(I18nService);
-
-  games = GAMES;
+  protected appData = inject(AppDataService);
   clock = signal('00:00');
   date = signal('');
   selectedId = signal<string | null>(null);
@@ -206,7 +184,7 @@ export class Desktop implements OnInit {
     ctx.fillStyle = base;
     ctx.fillRect(0, 0, W, H);
 
-    // Soft dark aurora orbs — muted so they don't overpower the UI
+    // Soft dark aurora orbs
     const orbs = [
       { x: 0.15, y: 0.3, r: 0.38, c1: 'rgba(99,102,241,0.22)', c2: 'transparent', speed: 0.7 },
       { x: 0.75, y: 0.55, r: 0.42, c1: 'rgba(139,92,246,0.18)', c2: 'transparent', speed: 0.5 },

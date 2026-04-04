@@ -1,21 +1,22 @@
 <div class="code-drop-space">
-    <div class="puz-title">Code Drop</div>
-<div class="puz-desc">
+  <div class="puz-title">Code Drop</div>
+  <div class="puz-desc">
     Service declarations are falling through the component tree.<br>
     Move the falling <code>inject()</code> call and land it on the matching component.<br>
     <span class="key-hint">← → Arrow keys or A/D &nbsp;·&nbsp; SPACE to drop fast</span>
-</div>
+  </div>
 
-<canvas #canvas [width]="CW" [height]="CH" class="game-canvas"
-    aria-label="Code drop game — use arrow keys to move, space to drop fast"></canvas>
+  <div class="canvas-shell canvas-shell--code-drop">
+    <canvas #canvas [width]="CW" [height]="CH" class="game-canvas"
+      aria-label="Code drop game — use arrow keys to move, space to drop fast"></canvas>
+  </div>
 
-<div class="hud-row">
-    <span class="hud-val" aria-live="polite">WIRED: {{ score() }}/{{ TOTAL }}</span>
+  <div class="hud-row">
+    <span class="hud-val" aria-live="polite">WIRED: {{ score() }}/{{ TOTAL() }}</span>
     <span class="hud-val" aria-live="polite">FUSES: <span class="live-val">{{ fusesDisplay() }}</span></span>
-    <button class="gbtn" (click)="startGame()">
-        {{ running() ? '↺ RESTART' : '▶ START INJECTOR' }}
+    <button class="gbtn" type="button" (click)="startGame()">
+      {{ running() ? '↺ RESTART' : '▶ START INJECTOR' }}
     </button>
-</div>
-
+  </div>
 </div>
 

@@ -8,11 +8,13 @@
         <span class="key-hint">← → Arrow keys or A/D to move</span>
     </div>
 
-    <canvas #canvas [width]="W" [height]="H" class="game-canvas"
-        aria-label="Debug runner game — use arrow keys to move left and right"></canvas>
+    <div class="canvas-shell canvas-shell--debug">
+        <canvas #canvas [width]="W" [height]="H" class="game-canvas"
+            aria-label="Debug runner game — use arrow keys to move left and right"></canvas>
+    </div>
 
     <div class="hud-row">
-        <span class="hud-val" aria-live="polite">COLLECTED: {{ score() }}/{{ TOTAL }}</span>
+        <span class="hud-val" aria-live="polite">COLLECTED: {{ score() }}/{{ TOTAL() }}</span>
         <span class="hud-val" aria-live="polite">LIVES: <span class="live-val">{{ livesDisplay() }}</span></span>
         <button class="gbtn" (click)="startGame()">
             {{ running() ? '↺ RESTART' : '▶ RUN DEBUGGER' }}

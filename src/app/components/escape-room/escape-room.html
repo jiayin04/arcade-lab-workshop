@@ -3,123 +3,153 @@
   <!-- Film grain overlay -->
   <div class="grain" aria-hidden="true"></div>
 
+  <!-- Debug Panel -->
+  @if(showDebug) {
+  <div class="debug-panel">
+    <h3>Debug Controls</h3>
+    <div class="debug-section">
+      <strong>Phase:</strong>
+      <button (click)="er.debugGoToPhase('intro')">Intro</button>
+      <button (click)="er.debugGoToPhase('room')">Room</button>
+      <button (click)="er.debugGoToPhase('game')">Game</button>
+      <button (click)="er.debugGoToPhase('win')">Win</button>
+    </div>
+    <div class="debug-section">
+      <strong>Room:</strong>
+      <button (click)="er.debugGoToRoom(0)">Server Room B-4</button>
+      <button (click)="er.debugGoToRoom(1)">Corridor B</button>
+      <button (click)="er.debugGoToRoom(2)">Mainframe</button>
+    </div>
+    <div class="debug-section">
+      <strong>Games:</strong>
+      <button (click)="er.debugStartGame(0)">Snake (T1)</button>
+      <button (click)="er.debugStartGame(1)">Memory (T2)</button>
+      <button (click)="er.debugStartGame(2)">Debug (T3)</button>
+      <button (click)="er.debugStartGame(3)">Code Drop (T4)</button>
+    </div>
+    <button class="debug-toggle" (click)="showDebug = false">Hide Debug</button>
+  </div>
+  }
+
+  @if (!showDebug && show) {
+  <button class="debug-toggle show-btn" (click)="showDebug = true" title="Show Debug Panel">🐛</button>
+  }
+
+
   @switch (er.phase()) {
 
-    <!-- ── INTRO ── -->
-    @case ('intro') {
-      <div class="intro-screen" (click)="startIntro()" role="button" tabindex="0"
-           aria-label="Click to begin the escape room" (keydown.enter)="startIntro()">
-        <div class="intro-inner">
-          <h1 class="intro-title">ANGULAR ESCAPE</h1>
-          <p class="intro-text">
-            The server room is dark.<br>
-            The application has stopped responding.<br>
-            Four systems must be restored before dawn.<br><br>
-            <em class="intro-em">You are the last developer on call.</em>
-          </p>
-          <p class="intro-hint">CLICK ANYWHERE TO BEGIN</p>
+  <!-- ── INTRO ── -->
+  @case ('intro') {
+  <div class="intro-screen" (click)="startIntro()" role="button" tabindex="0"
+    aria-label="Click to begin the escape room" (keydown.enter)="startIntro()">
+    <div class="intro-inner">
+      <h1 class="intro-title">ANGULAR ESCAPE</h1>
+      <p class="intro-text">
+        The server room is dark.<br>
+        The application has stopped responding.<br>
+        Four systems must be restored before dawn.<br><br>
+        <em class="intro-em">You are the last developer on call.</em>
+      </p>
+      <p class="intro-hint">CLICK ANYWHERE TO BEGIN</p>
+    </div>
+  </div>
+  }
+
+  <!-- ── ROOM ── -->
+  @case ('room') {
+  <div class="room-screen">
+    <!-- Top exit bar -->
+    <div class="room-topbar">
+      <div class="room-progress" role="list" aria-label="Terminal status">
+        @for (s of er.solved(); track $index) {
+        <div class="prog-dot" [class.done]="s" [class.active]="!s && er.activeTerminal() === $index" role="listitem"
+          [attr.aria-label]="'Terminal ' + ($index + 1) + (s ? ': online' : ': offline')">
+        </div>
+        }
+      </div>
+      <span class="room-tag" aria-live="polite">
+        @switch (er.currentRoom()) {
+        @case (0) { SERVER ROOM B-4 }
+        @case (1) { CORRIDOR B }
+        @case (2) { MAINFRAME — RESTRICTED }
+        }
+      </span>
+      <button class="exit-btn" (click)="exitToDesktop()" aria-label="Exit to desktop">✕ EXIT</button>
+    </div>
+
+    <!-- Rendered room with hotspots -->
+    <app-room-scene />
+  </div>
+  }
+
+  <!-- ── NARRATIVE OVERLAY ── -->
+  @case ('narrative') {
+  <app-er-narrative />
+  }
+
+  <!-- ── GAME SCREEN ── -->
+  @case ('game') {
+  <div class="game-screen">
+    <div class="game-topbar">
+      <span class="game-tag">{{ gameTag }}</span>
+      <button class="exit-btn medium" (click)="er.goRoom()" aria-label="Abandon puzzle and return to room">
+        ABANDON
+      </button>
+    </div>
+    <div class="game-body">
+      @switch (er.activeGame()) {
+      @case ('snake') { <app-snake-game /> }
+      @case ('memory') { <app-memory-game /> }
+      @case ('debug') { <app-debug-runner /> }
+      @case ('codedrop') { <app-code-drop /> }
+      }
+    </div>
+  </div>
+  }
+
+  <!-- ── WIN ── -->
+  @case ('win') {
+  <div class="win-screen" role="region" aria-label="You escaped!">
+    <h1 class="win-title">ESCAPED</h1>
+    <p class="win-sub">ALL SYSTEMS RESTORED</p>
+
+    <div class="win-concepts" role="list">
+      <div class="win-concept" role="listitem">
+        <span class="wc-check">✓</span>
+        <div>
+          <strong>signal() + computed()</strong>
+          <p>Reactive state that auto-propagates through the app</p>
         </div>
       </div>
-    }
-
-    <!-- ── ROOM ── -->
-    @case ('room') {
-      <div class="room-screen">
-        <!-- Top exit bar -->
-        <div class="room-topbar">
-          <div class="room-progress" role="list" aria-label="Terminal status">
-            @for (s of er.solved(); track $index) {
-              <div class="prog-dot"
-                   [class.done]="s"
-                   [class.active]="!s && er.activeTerminal() === $index"
-                   role="listitem"
-                   [attr.aria-label]="'Terminal ' + ($index + 1) + (s ? ': online' : ': offline')">
-              </div>
-            }
-          </div>
-          <span class="room-tag" aria-live="polite">
-            @switch (er.currentRoom()) {
-              @case (0) { SERVER ROOM B-4 }
-              @case (1) { CORRIDOR B }
-              @case (2) { MAINFRAME — RESTRICTED }
-            }
-          </span>
-          <button class="exit-btn" (click)="exitToDesktop()" aria-label="Exit to desktop">✕ EXIT</button>
-        </div>
-
-        <!-- Rendered room with hotspots -->
-        <app-room-scene />
-      </div>
-    }
-
-    <!-- ── NARRATIVE OVERLAY ── -->
-    @case ('narrative') {
-      <app-er-narrative />
-    }
-
-    <!-- ── GAME SCREEN ── -->
-    @case ('game') {
-      <div class="game-screen">
-        <div class="game-topbar">
-          <span class="game-tag">{{ gameTag }}</span>
-          <button class="exit-btn medium" (click)="er.goRoom()" aria-label="Abandon puzzle and return to room">
-            ABANDON
-          </button>
-        </div>
-        <div class="game-body">
-          @switch (er.activeGame()) {
-            @case ('snake')    { <app-snake-game /> }
-            @case ('memory')   { <app-memory-game /> }
-            @case ('debug')    { <app-debug-runner /> }
-            @case ('codedrop') { <app-code-drop /> }
-          }
+      <div class="win-concept" role="listitem">
+        <span class="wc-check">✓</span>
+        <div>
+          <strong>Component architecture</strong>
+          <p>Angular apps are trees of standalone components</p>
         </div>
       </div>
-    }
-
-    <!-- ── WIN ── -->
-    @case ('win') {
-      <div class="win-screen" role="region" aria-label="You escaped!">
-        <h1 class="win-title">ESCAPED</h1>
-        <p class="win-sub">ALL SYSTEMS RESTORED</p>
-
-        <div class="win-concepts" role="list">
-          <div class="win-concept" role="listitem">
-            <span class="wc-check">✓</span>
-            <div>
-              <strong>signal() + computed()</strong>
-              <p>Reactive state that auto-propagates through the app</p>
-            </div>
-          </div>
-          <div class="win-concept" role="listitem">
-            <span class="wc-check">✓</span>
-            <div>
-              <strong>Component architecture</strong>
-              <p>Angular apps are trees of standalone components</p>
-            </div>
-          </div>
-          <div class="win-concept" role="listitem">
-            <span class="wc-check">✓</span>
-            <div>
-              <strong>[ ] ( ) [( )] * — template binding</strong>
-              <p>Controls how data flows between class and template</p>
-            </div>
-          </div>
-          <div class="win-concept" role="listitem">
-            <span class="wc-check">✓</span>
-            <div>
-              <strong>inject() — Dependency Injection</strong>
-              <p>Angular provides services — no manual instantiation</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="win-actions">
-          <button class="win-btn primary" (click)="replay()">[ PLAY AGAIN ]</button>
-          <button class="win-btn" (click)="exitToDesktop()">[ EXIT ]</button>
+      <div class="win-concept" role="listitem">
+        <span class="wc-check">✓</span>
+        <div>
+          <strong>[ ] ( ) [( )] * — template binding</strong>
+          <p>Controls how data flows between class and template</p>
         </div>
       </div>
-    }
+      <div class="win-concept" role="listitem">
+        <span class="wc-check">✓</span>
+        <div>
+          <strong>inject() — Dependency Injection</strong>
+          <p>Angular provides services — no manual instantiation</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="win-actions">
+      <button class="win-btn primary" (click)="replay()">[ PLAY AGAIN ]</button>
+      <button class="win-btn" (click)="exitToDesktop()">[ EXIT ]</button>
+    </div>
+  </div>
+  }
 
   }
 

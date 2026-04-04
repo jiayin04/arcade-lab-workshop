@@ -1,16 +1,11 @@
 import {
   Component, inject, OnDestroy, AfterViewInit,
-  ViewChild, ElementRef, ChangeDetectionStrategy, signal, HostListener,
+  ViewChild, ElementRef, ChangeDetectionStrategy, signal, HostListener, computed,
 } from '@angular/core';
 import { EscapeRoomService } from '../../../service/escape-room';
 import { CodePiece, CodeSlot } from '../../../models/escape';
-
-const CD_PAIRS = [
-  { comp: 'UserDashboard', service: 'DataService' },
-  { comp: 'LoginForm', service: 'AuthService' },
-  { comp: 'ActivityLog', service: 'LogService' },
-  { comp: 'NavGuard', service: 'RouterService' },
-];
+import { CodeDropPair } from '../../../models/escape-room-content';
+import { AppDataService } from '../../../../../services/app-data/app-data';
 
 const CW = 680, CH = 450, SLOT_H = 55, PIECE_W = 158, PIECE_H = 50;
 
@@ -25,8 +20,18 @@ export class CodeDrop implements AfterViewInit, OnDestroy {
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
 
   protected er = inject(EscapeRoomService);
+  private appData = inject(AppDataService);
 
-  readonly CW = CW; readonly CH = CH; readonly TOTAL = CD_PAIRS.length;
+  readonly CW = CW; readonly CH = CH;
+  readonly TOTAL = computed(() => this.pairs().length);
+
+  private pairs(): CodeDropPair[] {
+    return this.appData.escapeRoomContent()?.codeDrop.pairs ?? [];
+  }
+
+  private cdUi() {
+    return this.appData.escapeRoomContent()?.codeDrop.ui;
+  }
 
   score = signal(0);
   fuses = signal(3);
@@ -59,15 +64,18 @@ export class CodeDrop implements AfterViewInit, OnDestroy {
   }
 
   startGame(): void {
+    const pairList = this.pairs();
+    if (pairList.length === 0) return;
+
     cancelAnimationFrame(this.raf);
     this.score.set(0);
     this.fuses.set(3);
     this.running.set(true);
     this.frame = 0;
-    this.queue = CD_PAIRS.map(p => p.service).sort(() => Math.random() - 0.5);
+    this.queue = pairList.map(p => p.service).sort(() => Math.random() - 0.5);
     this.qIdx = 0;
-    const slotW = CW / CD_PAIRS.length;
-    this.slots = CD_PAIRS.map((p, i): CodeSlot => ({
+    const slotW = CW / pairList.length;
+    this.slots = pairList.map((p, i): CodeSlot => ({
       x: i * slotW, w: slotW, comp: p.comp, service: p.service, wired: false,
     }));
     this.piece = null;
@@ -108,19 +116,21 @@ export class CodeDrop implements AfterViewInit, OnDestroy {
     this.drawFrame(ctx);
 
     if (this.fuses() <= 0) {
+      const ui = this.cdUi();
       this.running.set(false);
       ctx.fillStyle = 'rgba(0,0,0,0.72)'; ctx.fillRect(0, 0, CW, CH);
       ctx.fillStyle = 'rgba(200,80,80,0.85)'; ctx.font = '25px "Share Tech Mono"'; ctx.textAlign = 'center';
-      ctx.fillText('INJECTOR OVERLOADED', CW / 2, CH / 2 - 8);
+      ctx.fillText(ui?.overloadTitle ?? 'INJECTOR OVERLOADED', CW / 2, CH / 2 - 8);
       ctx.fillStyle = 'rgba(200,160,80,0.42)'; ctx.font = '15px "Share Tech Mono"';
-      ctx.fillText('Press ▶ START INJECTOR to retry', CW / 2, CH / 2 + 12);
+      ctx.fillText(ui?.overloadRetry ?? 'Press ▶ START INJECTOR to retry', CW / 2, CH / 2 + 12);
       return;
     }
-    if (this.score() >= CD_PAIRS.length) {
+    if (this.score() >= this.pairs().length) {
+      const ui = this.cdUi();
       this.running.set(false);
       ctx.fillStyle = 'rgba(0,0,0,0.72)'; ctx.fillRect(0, 0, CW, CH);
       ctx.fillStyle = 'rgba(0,200,80,0.85)'; ctx.font = '25px "Share Tech Mono"'; ctx.textAlign = 'center';
-      ctx.fillText('inject() CHAIN RESTORED', CW / 2, CH / 2);
+      ctx.fillText(ui?.winTitle ?? 'inject() CHAIN RESTORED', CW / 2, CH / 2);
       setTimeout(() => this.er.solveTerminal(3), 1400);
       return;
     }
@@ -173,13 +183,14 @@ export class CodeDrop implements AfterViewInit, OnDestroy {
 
   private drawIdle(): void {
     const ctx = this.ctx(); if (!ctx) return;
+    const ui = this.cdUi();
     ctx.fillStyle = '#020206'; ctx.fillRect(0, 0, CW, CH);
     ctx.fillStyle = 'rgba(200,160,80,0.28)'; ctx.font = '15px "Share Tech Mono"'; ctx.textAlign = 'center';
-    ctx.fillText('PRESS ▶ START INJECTOR', CW / 2, CH / 2);
+    ctx.fillText(ui?.idle ?? 'PRESS ▶ START INJECTOR', CW / 2, CH / 2);
   }
 
   private spawnPiece(): void {
-    const unwired = CD_PAIRS
+    const unwired = this.pairs()
       .filter(p => !this.slots.find(s => s.service === p.service && s.wired))
       .map(p => p.service);
 

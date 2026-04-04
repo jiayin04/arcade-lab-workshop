@@ -1,5 +1,8 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { AppDataService } from '../../../../services/app-data/app-data';
 import { RoomScene } from './room-scene';
 
 describe('RoomScene', () => {
@@ -8,7 +11,8 @@ describe('RoomScene', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RoomScene]
+      imports: [RoomScene],
+      providers: [provideHttpClient(), provideHttpClientTesting(), AppDataService],
     })
     .compileComponents();
 

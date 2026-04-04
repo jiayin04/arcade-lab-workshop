@@ -1,0 +1,11 @@
+[
+  {
+    "id": "escape",
+    "nameKey": "game.escape",
+    "descKey": "game.escape.desc",
+    "emoji": "🔐",
+    "route": "/escape-room/escape",
+    "bgRetro": "#1e0845",
+    "bgModern": "#1c1152"
+  }
+]

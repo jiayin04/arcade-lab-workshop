@@ -8,6 +8,7 @@ export interface TerminalDef {
   lines: string[];
   game: GameType;
   tag: string;
+  resultLine: string;
 }
 
 export interface NarrChoice {
