@@ -194,6 +194,16 @@ The escape room includes a debug panel (🐛 button) for testing:
 - Start any terminal game directly
 - Mark terminals as solved/unsolved
 
+## Code of Conduct
+[Code of Conduct](CODE_OF_CONDUCT)
+
+
+## Contributing
+[Contributing](CONTRIBUTING)
+
+
 ## License
 
 [MIT LICENSE](LICENSE)
+
+
