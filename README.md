@@ -103,90 +103,6 @@ You're the last developer on call in a server room where four critical Angular s
 | **T3** | Dependency Injection | ⚡ Debug Runner | Understand `inject()` and service patterns |
 | **T4** | Component Architecture | 📦 Code Drop | Build with standalone components |
 
-
-## Angular 21 Concepts Demonstrated
-
-### 1. Zoneless Change Detection
-```typescript
-// app.config.ts
-export const appConfig: ApplicationConfig = {
-  providers: [
-    provideZonelessChangeDetection(), // Angular 21 default
-    provideRouter(routes),
-  ],
-};
-```
-
-### 2. Signals as Reactive State
-```typescript
-// escape-room.service.ts
-readonly phase = signal<GamePhase>('intro');
-readonly solved = signal<boolean[]>([false, false, false, false]);
-readonly solvedCount = computed(() => this.solved().filter(Boolean).length);
-
-// Update reactively
-this.phase.set('room');
-this.solved.update(solved => solved.map((s, i) => i === terminal ? true : s));
-```
-
-### 3. New Control Flow Syntax
-```html
-<!-- @if/@else for conditional rendering -->
-@if (er.phase() === 'intro') {
-  <div class="intro-screen">Welcome to the escape room!</div>
-} @else if (er.phase() === 'room') {
-  <app-room-scene />
-}
-
-<!-- @for for lists -->
-@for (s of er.solved(); track $index) {
-  <div class="terminal" [class.solved]="s">Terminal {{$index + 1}}</div>
-}
-```
-
-### 4. Standalone Components
-```typescript
-@Component({
-  selector: 'app-escape-room',
-  standalone: true,  // No NgModule needed!
-  imports: [CommonModule, RoomScene, Narrative, SnakeGame],
-  templateUrl: './escape-room.html',
-})
-export class EscapeRoom {
-  // Component logic here
-}
-```
-
-### 5. Dependency Injection with inject()
-```typescript
-@Injectable({ providedIn: 'root' })
-export class EscapeRoomService {
-  private appData = inject(AppDataService);  // No constructor needed!
-  readonly terminals = computed(() => this.appData.terminals());
-}
-```
-
-### 6. ARIA Accessibility
-```html
-<div class="room-screen" role="region" aria-label="Server room navigation">
-  <div class="terminal-progress" role="list" aria-label="Terminal status">
-    @for (s of solved(); track $index) {
-      <div class="prog-dot" role="listitem"
-           [attr.aria-label]="'Terminal ' + ($index + 1) + (s ? ': online' : ': offline')">
-      </div>
-    }
-  </div>
-</div>
-```
-
-### 7. i18n Internationalization
-```html
-<!-- escape-room.html -->
-<h1 i18n="@@escape.title">ANGULAR ESCAPE</h1>
-<p i18n="@@escape.instructions">Four systems must be restored before dawn.</p>
-```
-
-
 ## Debug Mode
 
 The escape room includes a debug panel (🐛 button) for testing:
@@ -196,11 +112,6 @@ The escape room includes a debug panel (🐛 button) for testing:
 
 ## Code of Conduct
 [Code of Conduct](CODE_OF_CONDUCT)
-
-
-## Contributing
-[Contributing](CONTRIBUTING)
-
 
 ## License
 
