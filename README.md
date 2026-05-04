@@ -103,6 +103,10 @@ You're the last developer on call in a server room where four critical Angular s
 | **T3** | Dependency Injection | ⚡ Debug Runner | Understand `inject()` and service patterns |
 | **T4** | Component Architecture | 📦 Code Drop | Build with standalone components |
 
+
+## Angular 21 Concepts Demonstrated
+- Refer to [Guided Learning](https://www.notion.so/GDGoC-APU-Angular-Arcade-Lab-Workshop-339d60301a1a80058993f28f6417197f) in Notion
+
 ## Debug Mode
 
 The escape room includes a debug panel (🐛 button) for testing:
@@ -113,8 +117,8 @@ The escape room includes a debug panel (🐛 button) for testing:
 ## Code of Conduct
 [Code of Conduct](CODE_OF_CONDUCT)
 
+
 ## License
 
 [MIT LICENSE](LICENSE)
-
 
