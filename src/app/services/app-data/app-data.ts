@@ -17,17 +17,16 @@ export class AppDataService {
 
   load(): Promise<void> {
     if (!this.loadPromise) {
-      this.loadPromise = firstValueFrom(
-        forkJoin({
-          games: this.http.get<GameApp[]>('assets/data/games.json'),
-          terminals: this.http.get<TerminalDef[]>('assets/data/escape-terminals.json'),
-          escapeRoomContent: this.http.get<EscapeRoomContent>('assets/data/escape-room-content.json'),
-        })
-      ).then(({ games, terminals, escapeRoomContent }) => {
-        this.games.set(games);
-        this.terminals.set(terminals);
-        this.escapeRoomContent.set(escapeRoomContent);
-      });
+      // TODO: WORKSHOP PART 1 - HTTP & Data Fetching
+      // 1. We need to fetch 3 files simultaneously: 
+      //    'assets/data/games.json'
+      //    'assets/data/escape-terminals.json'
+      //    'assets/data/escape-room-content.json'
+      // 2. Use `firstValueFrom` and `forkJoin` to fetch them in parallel using `this.http.get`.
+      // 3. When they resolve, use `.then(...)` to `.set()` the 3 signals above: games, terminals, escapeRoomContent.
+
+      this.loadPromise = Promise.resolve(); // REMOVE ME during workshop
+
     }
     return this.loadPromise;
   }

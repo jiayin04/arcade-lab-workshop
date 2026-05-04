@@ -13,17 +13,22 @@ interface MemCard { id: number; emoji: string; label: string; description: strin
 @Component({
   selector: 'app-memory-game',
   standalone: true,
+  // imports: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './memory-game.html',
   styleUrl: './memory-game.scss',
 })
 export class MemoryGame {
   protected er = inject(EscapeRoomService);
-  private appData = inject(AppDataService);
 
-  private pairRows(): MemoryPairRow[] {
-    return this.appData.escapeRoomContent()?.memoryGame.pairs ?? [];
-  }
+  // TODO: WORKSHOP PART 2A - Dependency Injection
+  // 1. We need data for the cards! Inject `AppDataService`.
+  // private appData = ...
+
+  // 2. Create a method or computed signal to grab the pairs:
+  // private pairRows() { ... }
+
+  private pairRows(): MemoryPairRow[] { return []; } // REMOVE ME during workshop
 
   readonly TOTAL = computed(() => this.pairRows().length);
   isClosing = signal(false);
@@ -31,66 +36,14 @@ export class MemoryGame {
   flashcard = signal<{ emoji: string; label: string; description: string } | null>(null);
   private flashTimer: ReturnType<typeof setTimeout> | null = null;
 
-  cards = signal<MemCard[]>([]);
   private flipped = signal<number[]>([]);
   private locked = signal(false);
 
-  matchCount = computed(() => this.cards().filter(c => c.matched).length / 2);
 
-  constructor() { this.newGame(); }
-
-  newGame(): void {
-    const rows = this.pairRows();
-    const deck = [...rows, ...rows]
-      .sort(() => Math.random() - 0.5)
-      .map((row, id): MemCard => ({
-        id,
-        emoji: row.emoji,
-        label: row.label,
-        description: row.description,
-        flipped: false,
-        matched: false,
-      }));
-    this.cards.set(deck);
-    this.flipped.set([]);
-    this.locked.set(false);
-  }
-
-  flip(id: number): void {
-    if (this.locked()) return;
-    const card = this.cards()[id];
-    if (card.flipped || card.matched) return;
-
-    this.cards.update(cs => cs.map(c => c.id === id ? { ...c, flipped: true } : c));
-    const current = [...this.flipped(), id];
-    this.flipped.set(current);
-
-    if (current.length === 2) {
-      this.locked.set(true);
-      const [a, b] = current;
-      if (this.cards()[a].emoji === this.cards()[b].emoji) {
-        this.cards.update(cs => cs.map(c => (c.id === a || c.id === b) ? { ...c, matched: true, flipped: false } : c));
-        this.flipped.set([]);
-        this.locked.set(false);
-        const matched = this.cards()[a];
-        // Flash card shown
-        this.flashcard.set({ emoji: matched.emoji, label: matched.label, description: matched.description });
-        if (this.flashTimer) clearTimeout(this.flashTimer);
-        this.flashTimer = setTimeout(() => this.closeFlashCard(), 4000);
-
-        if (this.matchCount() >= this.TOTAL()) {
-          setTimeout(() => this.er.solveTerminal(1), 700);
-        }
-      } else {
-        setTimeout(() => {
-          this.cards.update(cs => cs.map(c => (c.id === a || c.id === b) ? { ...c, flipped: false } : c));
-          this.flipped.set([]);
-          this.locked.set(false);
-        }, 900);
-      }
-    }
-  }
-
+  // TODO: WORKSHOP PART 2B - Signals (Reactive State)
+  // 3. Move the `cards` signal definition here with match count computed property.
+  cards = []; // REMOVE ME DURING WORKSHOP
+  matchCount = signal(0); // REMOVE ME DURING WORKSHOP
 
   closeFlashCard() {
     this.isClosing.set(true);

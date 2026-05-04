@@ -1,20 +1,23 @@
 <div class="snake-game-root">
-  <div class="puz-title">Signal Stream</div>
+  <!-- TODO: WORKSHOP PART 3D - i18n Internationalization -->
+  <!-- 1. Replace static text with dynamic translation using i18nService -->
+  <!-- 2. Call: i18nService.t('snake.title') inside interpolation -->
+  <!-- 3. This allows the title to change based on selected language -->
+
+  <div class="puz-title">Signal Stream</div> <!-- REPLACE ME DURING WORKSHOP-->
   <div class="puz-desc">
     Navigate the data packet through the signal network.<br>
     Collect {{ TARGET }} nodes to restore the reactive chain.<br>
     <span class="key-hint">Arrow keys or WASD</span>
   </div>
 
-  <div class="canvas-shell canvas-shell--snake">
-    <canvas #canvas [width]="COLS * CELL" [height]="ROWS * CELL" class="game-canvas" tabindex="0"
-      aria-label="Snake game — use arrow keys to move"></canvas>
-  </div>
+  <!-- TODO: WORKSHOP PART 3E - ARIA Accessibility -->
+  <!-- 1. The canvas below needs accessible labels so screen readers know what it is. -->
+  <!-- 2. Add: aria-label="Snake game — use arrow keys to move" -->
+  <!-- 3. Add: tabindex="0" (so it is focusable) -->
 
-  <div class="hud-row">
-    <span class="hud-val">NODES: <span>{{ score() }}</span>/{{ TARGET }}</span>
-    <button class="gbtn" type="button" (click)="startGame()">
-      {{ running() ? '↺ RESTART' : '▶ INITIALISE' }}
-    </button>
-  </div>
+  <!-- TODO: WORKSHOP PART 3C - Formatter Pipes -->
+  <!-- 1. Use the Angular built-in 'number' pipe to format the score! -->
+  <!-- 2. For example: {{ score() | number:'3.0-0' }} will display as 005 instead of just 5 -->
+  
 </div>

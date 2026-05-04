@@ -2,14 +2,17 @@ import {
   Component, inject, OnDestroy, AfterViewInit,
   ViewChild, ElementRef, ChangeDetectionStrategy, signal, HostListener,
 } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 import { EscapeRoomService } from '../../../service/escape-room';
 import { SnakePoint, SnakeDir } from '../../../models/escape';
+import { I18nService } from '../../../../../services/i18n/i18n';
 
 const COLS = 32, ROWS = 20, CELL = 18, TARGET = 5;
 
 @Component({
   selector: 'app-snake-game',
   standalone: true,
+  imports: [DecimalPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './snake-game.html',
   styleUrl: './snake-game.scss',
@@ -18,6 +21,7 @@ export class SnakeGame implements AfterViewInit, OnDestroy {
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
 
   protected er = inject(EscapeRoomService);
+  i18nService = inject(I18nService);
   readonly COLS = COLS; readonly ROWS = ROWS; readonly CELL = CELL; readonly TARGET = TARGET;
 
   score   = signal(0);
@@ -34,22 +38,24 @@ export class SnakeGame implements AfterViewInit, OnDestroy {
   @HostListener('window:keydown', ['$event'])
   onKey(e: KeyboardEvent): void {
     if (!this.running()) return;
-    const map: Record<string, SnakeDir> = { ArrowUp:'u', ArrowDown:'d', ArrowLeft:'l', ArrowRight:'r', w:'u', s:'d', a:'l', d:'r' };
-    const opp: Record<SnakeDir, SnakeDir> = { u:'d', d:'u', l:'r', r:'l' };
-    const next = map[e.key];
-    if (next && opp[next] !== this.dir) {
-      this.dir = next;
-      if (e.key.startsWith('Arrow')) e.preventDefault();
-    }
+    
+    // TODO: WORKSHOP PART 3A - Event Binding & Keyboard Logic
+    // 1. We are listening to 'window:keydown'. Write logic to update `this.dir` based on `e.key`.
+    // 2. The arrow keys are 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'.
+    // 3. Prevent the default browser scrolling for arrow keys with `e.preventDefault()`.
+    
   }
 
   startGame(): void {
     this.stop();
     this.snake = [{ x: 16, y: 10 }, { x: 15, y: 10 }, { x: 14, y: 10 }];
     this.dir = 'r';
-    this.score.set(0);
     this.food = this.rndFood();
-    this.running.set(true);
+    
+    // TODO: WORKSHOP PART 3B - Signals Setting
+    // 1. We need to initialize the game state using `this.score.set(...)` and `this.running.set(...)`.
+    // 2. Set 'score' to 0 and 'running' to true.
+    
     this.timer = setInterval(() => this.tick(), 115);
   }
 
@@ -64,7 +70,9 @@ export class SnakeGame implements AfterViewInit, OnDestroy {
     }
     this.snake.unshift(hd);
     if (hd.x === this.food.x && hd.y === this.food.y) {
-      this.score.update(s => s + 1);
+      // TODO: WORKSHOP PART 3B - Signals updating
+      // 1. The snake ate the data node! Update the `score` signal to increment by 1.
+      
       if (this.score() >= TARGET) {
         this.stop(); this.running.set(false); this.drawWin(); return;
       }
