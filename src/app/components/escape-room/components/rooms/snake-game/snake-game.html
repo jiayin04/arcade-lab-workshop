@@ -1,4 +1,5 @@
 <div class="snake-game-root">
+  <!-- <div class="puz-title">{{ i18nService.t('snake.title') }}</div> -->
   <div class="puz-title">Signal Stream</div>
   <div class="puz-desc">
     Navigate the data packet through the signal network.<br>
@@ -12,7 +13,7 @@
   </div>
 
   <div class="hud-row">
-    <span class="hud-val">NODES: <span>{{ score() }}</span>/{{ TARGET }}</span>
+    <span class="hud-val">NODES: <span>{{ score() | number:'3.0-0' }}</span>/{{ TARGET }}</span>
     <button class="gbtn" type="button" (click)="startGame()">
       {{ running() ? '↺ RESTART' : '▶ INITIALISE' }}
     </button>

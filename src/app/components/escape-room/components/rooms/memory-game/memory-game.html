@@ -19,7 +19,12 @@
             (keydown.space)="flip(card.id); $event.preventDefault()">
             <div class="mem-inner">
                 <div class="mem-back" aria-hidden="true"></div>
-                <div class="mem-front" aria-hidden="true">{{ card.emoji }}</div>
+                <div class="mem-front" aria-hidden="true">
+                    {{ card.emoji }}
+                    <div style="font-size: 14px; margin-top: 5px; color: rgba(200, 160, 80);">
+                      {{ card.label | uppercase}} 
+                    </div>
+                </div>
             </div>
         </div>
         }

@@ -7,12 +7,14 @@ import {
 import { EscapeRoomService } from '../../../service/escape-room';
 import { MemoryPairRow } from '../../../models/escape-room-content';
 import { AppDataService } from '../../../../../services/app-data/app-data';
+import { UpperCasePipe } from '@angular/common';
 
 interface MemCard { id: number; emoji: string; label: string; description: string; flipped: boolean; matched: boolean; }
 
 @Component({
   selector: 'app-memory-game',
   standalone: true,
+  imports: [UpperCasePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './memory-game.html',
   styleUrl: './memory-game.scss',

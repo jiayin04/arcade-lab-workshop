@@ -4,12 +4,15 @@ import {
 } from '@angular/core';
 import { EscapeRoomService } from '../../../service/escape-room';
 import { SnakePoint, SnakeDir } from '../../../models/escape';
+import { DecimalPipe } from '@angular/common';
+import { I18nService } from '../../../../../services/i18n/i18n';
 
 const COLS = 32, ROWS = 20, CELL = 18, TARGET = 5;
 
 @Component({
   selector: 'app-snake-game',
   standalone: true,
+  imports: [DecimalPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './snake-game.html',
   styleUrl: './snake-game.scss',
@@ -18,6 +21,7 @@ export class SnakeGame implements AfterViewInit, OnDestroy {
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
 
   protected er = inject(EscapeRoomService);
+  i18nService = inject(I18nService);
   readonly COLS = COLS; readonly ROWS = ROWS; readonly CELL = CELL; readonly TARGET = TARGET;
 
   score   = signal(0);
