@@ -76,8 +76,19 @@
 
 ### Installation
 ```bash
+git clone https://github.com/jiayin04/arcade-lab-workshop.git
+cd arcade-lab-workshop
 npm install
 ```
+
+> **Workshop Branches:**
+> - `main`: The fully functional, completed version of the application.
+> - `workshop-guide`: The starting point for the workshop, featuring guided learning exercises and incomplete code for you to fill in.
+> 
+> To follow along with the workshop, switch to the guide branch:
+> ```bash
+> git checkout workshop-guide
+> ```
 
 ### Development Server
 ```bash
@@ -92,20 +103,18 @@ npm run build
 
 ## The Escape Room Experience
 
-You're the last developer on call in a server room where four critical Angular systems have failed. Your mission: restore each terminal by solving interactive puzzles that teach Angular 21 concepts.
+You're the last developer on call in a server room where critical Angular systems have failed. Your mission: restore the terminals by participating in guided exercises to complete the source code and learn modern Angular 21 concepts.
 
-### Terminals & Angular Concepts
+- Refer to [Guided Learning](https://www.notion.so/GDGoC-APU-Angular-Arcade-Lab-Workshop-339d60301a1a80058993f28f6417197f) in Notion for step-by-step workshop instructions.
 
-| Terminal | Concept | Game | Description |
+### Workshop Modules & Angular Concepts
+
+| Workshop Part | Concept | Game / Component | Description |
 |---|---|---|---|
-| **T1** | Signals & Reactivity | 🐍 Snake Game | Learn reactive state with `signal()` and `computed()` |
-| **T2** | Template Binding | 🧠 Memory Game | Master `[()]` banana-in-a-box syntax |
-| **T3** | Dependency Injection | ⚡ Debug Runner | Understand `inject()` and service patterns |
-| **T4** | Component Architecture | 📦 Code Drop | Build with standalone components |
-
-
-## Angular 21 Concepts Demonstrated
-- Refer to [Guided Learning](https://www.notion.so/GDGoC-APU-Angular-Arcade-Lab-Workshop-339d60301a1a80058993f28f6417197f) in Notion
+| **Part 1** | Data Fetching | 🌐 App Data Service | Fetch data with `HttpClient` and RxJS `forkJoin` |
+| **Part 2** | UI & State | 🧠 Memory Game | Connect data via Dependency Injection, Signals, and Control Flow |
+| **Part 3** | Game Interaction | 🐍 Snake Game | Add event binding, formatting pipes, i18n, and ARIA accessibility |
+| **Quiz** | Custom Pipes | 🧠 Memory Game | Build a custom `mask` pipe to hide string characters |
 
 ## Debug Mode
 
@@ -115,10 +124,8 @@ The escape room includes a debug panel (🐛 button) for testing:
 - Mark terminals as solved/unsolved
 
 ## Code of Conduct
-[Code of Conduct](CODE_OF_CONDUCT)
-
+[Code of Conduct](CODE_OF_CONDUCT.md)
 
 ## License
 
 [MIT LICENSE](LICENSE)
-
