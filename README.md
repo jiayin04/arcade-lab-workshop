@@ -130,4 +130,3 @@ The escape room includes a debug panel (🐛 button) for testing:
 
 [MIT LICENSE](LICENSE)
 
-
